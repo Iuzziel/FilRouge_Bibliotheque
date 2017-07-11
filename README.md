@@ -2,11 +2,11 @@
 
 ### Table des matières :
 
-1. [Exercice de restitution](###Exercicederestitution)
-1. [Acteurs](###Acteurs)
-1. [Liste des « Use Case »](###Listedes«UseCase»)
-1. [Réalistation](###Réalistation)
-1. [Divers](#####Divers)
+1. [Exercice de restitution](#exercice-de-restitution-)
+1. [Acteurs](#acteurs-)
+1. [Liste des « Use Case »](#liste-des--use-case--)
+1. [Réalistation](#réalistation-)
+1. [Divers](#divers-)
    
 ### ToDo List :
 
@@ -45,5 +45,5 @@ Employé | Regroupe tous les employés de la municipalité travaillant pour la b
 * Partie client en Java
 * Partie serveur Oracle
 
-##### Divers :
+#### Divers :
 [Repo du projet](https://github.com/Iuzziel/FilRouge_Bibliotheque/)
