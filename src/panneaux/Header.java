@@ -7,9 +7,14 @@ import javax.swing.border.TitledBorder;
 import fenetres.FenetreConnexion;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.border.EmptyBorder;
 
 public class Header extends JPanel {
 	/**
@@ -19,6 +24,8 @@ public class Header extends JPanel {
 
 	// ***********************************************Donnees membre*****************************************//
 	private JLabel lblHeaderSeConnecter = new JLabel("Se connecter");
+	private JButton btnQuitter = new JButton("Quitter");
+
 
 	// ***********************************************Constructeur*****************************************//
 	/**
@@ -43,7 +50,7 @@ public class Header extends JPanel {
 		.setBorder(new TitledBorder(null, "Fonction avanc\u00E9e", TitledBorder.LEADING, TitledBorder.TOP));
 		add(panHeaderConnexion, BorderLayout.EAST);
 
-		//
+		// Panneau de connexion/*
 		JLabel lblIconeConnexion = new JLabel("");
 		lblIconeConnexion.setIcon(new ImageIcon(Header.class.getResource("/com/sun/java/swing/plaf/windows/icons/UpFolder.gif")));
 		panHeaderConnexion.add(lblIconeConnexion);
@@ -52,6 +59,14 @@ public class Header extends JPanel {
 		lblHeaderSeConnecter.setForeground(Color.BLUE);
 		lblHeaderSeConnecter.addMouseListener(new AppMouseListener());
 		panHeaderConnexion.add(lblHeaderSeConnecter);
+
+		// Panneau quitter /*
+		JPanel panQuitter = new JPanel();
+		panQuitter.setBorder(new EmptyBorder(5, 5, 5, 5));
+		add(panQuitter, BorderLayout.WEST);
+		panQuitter.setLayout(new BoxLayout(panQuitter, BoxLayout.X_AXIS));
+		btnQuitter.addActionListener(new AppActionListener());
+		panQuitter.add(btnQuitter);
 	}
 
 	// ***********************************************Accesseurs*****************************************//
@@ -64,6 +79,16 @@ public class Header extends JPanel {
 	}
 
 	// ***********************************************Listerners*****************************************//
+	class AppActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Auto-generated method stub
+			if (e.getSource() == btnQuitter) {
+				System.exit(0);
+			}
+		}
+	}
+	
 	class AppMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
