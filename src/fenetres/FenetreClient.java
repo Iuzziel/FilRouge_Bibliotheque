@@ -1,7 +1,6 @@
 package fenetres;
 
 import javax.swing.JWindow;
-
 import panneaux.Header;
 import panneaux.InformationLivre;
 import panneaux.RechercherUnLivre;
