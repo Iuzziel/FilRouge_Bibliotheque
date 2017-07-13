@@ -10,13 +10,14 @@ public class Principale {
 		FenetreClient fenetre = new FenetreClient();
 		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		Rectangle rec = ge.getMaximumWindowBounds();
+		Rectangle tailleEcran = ge.getMaximumWindowBounds();
 		
-		fenetre.setSize(rec.getSize());
-		
+		fenetre.setSize(tailleEcran.getSize());
 		fenetre.setVisible(true);
-		/*FenetreEmploye fenetreEmploye = new FenetreEmploye();
-		fenetreEmploye.setVisible(true);*/
+		
+		FenetreEmploye fenetreEmploye = new FenetreEmploye();
+		fenetreEmploye.setSize(tailleEcran.getSize());
+		fenetreEmploye.setVisible(true);
 	}
 
 }
