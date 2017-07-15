@@ -26,7 +26,9 @@ public class FenetreEmploye extends JWindow {
 		//this.setLocationRelativeTo(null);
 		//this.setResizable(true);
 		this.getContentPane().setLayout(new BorderLayout(5, 5));
-		this.getContentPane().add(new Header("Espace employe de la bibliotheque"), BorderLayout.NORTH);
+		Header headerEmploye = new Header("Espace employe de la bibliotheque");
+		headerEmploye.getLblHeaderSeConnecter().setText("Se deconnecter");
+		this.getContentPane().add(headerEmploye, BorderLayout.NORTH);
 
 		// Creation du tabbedPane
 		JTabbedPane tabEspaceEmploye = new JTabbedPane(JTabbedPane.TOP);

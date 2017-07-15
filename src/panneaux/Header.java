@@ -39,15 +39,14 @@ public class Header extends JPanel {
 		JPanel panHeaderTitre = new JPanel();
 		add(panHeaderTitre, BorderLayout.CENTER);
 
-		// Titre
+		// Titre de la page consulte
 		JLabel lblHeaderTitrePage = new JLabel(titre);
 		lblHeaderTitrePage.setFont(new Font("Tahoma", Font.BOLD, 16));
 		panHeaderTitre.add(lblHeaderTitrePage);
 
 		// Panneau de connexion
 		JPanel panHeaderConnexion = new JPanel();
-		panHeaderConnexion
-		.setBorder(new TitledBorder(null, "Fonction avanc\u00E9e", TitledBorder.LEADING, TitledBorder.TOP));
+		panHeaderConnexion.setBorder(new TitledBorder(null, "Fonction avanc\u00E9e", TitledBorder.LEADING, TitledBorder.TOP));
 		add(panHeaderConnexion, BorderLayout.EAST);
 
 		// Panneau de connexion/*
@@ -61,6 +60,7 @@ public class Header extends JPanel {
 		panHeaderConnexion.add(lblHeaderSeConnecter);
 
 		// Panneau quitter /*
+		// bouton quitter pour quitter l'application
 		JPanel panQuitter = new JPanel();
 		panQuitter.setBorder(new EmptyBorder(5, 5, 5, 5));
 		add(panQuitter, BorderLayout.WEST);
@@ -93,11 +93,14 @@ public class Header extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// Auto-generated method stub
-			if (e.getSource() == lblHeaderSeConnecter) {
+			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se connecter")) {
 				FenetreConnexion fenetreConnexion = new FenetreConnexion();
 				fenetreConnexion.setLocationRelativeTo(null);
 				fenetreConnexion.setVisible(true);
 				fenetreConnexion.setAlwaysOnTop(true);
+			}
+			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se deconnecter")) {
+				System.exit(0);
 			}
 		}
 
