@@ -1,13 +1,13 @@
 package fenetres;
 
-import javax.swing.JFrame;
+import javax.swing.JWindow;
 import panneaux.Header;
 import panneaux.InformationLivre;
 import panneaux.RechercherUnLivre;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-public class FenetreClient extends JFrame {
+public class FenetreClient extends JWindow {
 
 	/**
 	 * 
@@ -17,11 +17,11 @@ public class FenetreClient extends JFrame {
 	// Constructeur de la fenetre
 	public FenetreClient() {
 		this.setMinimumSize(new Dimension(800, 600));
-		this.setSize(1024, 768);
-		this.setTitle("Bienvenu dans le logiciel de la bibliotheque");
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setResizable(true);
+		//this.setSize(1024, 768);
+		//this.setTitle("Bienvenu dans le logiciel de la bibliotheque");
+		//this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setLocation(0, 0);
+		//this.setResizable(true);
 		this.getContentPane().setLayout(new BorderLayout(5, 5));
 
 		// Creation des modules composant cette Frame

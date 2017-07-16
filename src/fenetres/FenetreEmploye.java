@@ -1,15 +1,15 @@
 package fenetres;
 
 import panneaux.*;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JWindow;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 
-public class FenetreEmploye extends JFrame {
+public class FenetreEmploye extends JWindow {
 
 	/**
 	 * 
@@ -18,14 +18,17 @@ public class FenetreEmploye extends JFrame {
 
 	// Constructeur de la fenetre
 	public FenetreEmploye() {
-		this.setTitle("Bienvenu dans le logiciel de la bibliotheque");
+		//this.setTitle("Bienvenu dans le logiciel de la bibliotheque");
 		this.setMinimumSize(new Dimension(800, 600));
 		this.setSize(1024, 768);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setResizable(true);
+		//this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setLocation(0, 0);
+		//this.setLocationRelativeTo(null);
+		//this.setResizable(true);
 		this.getContentPane().setLayout(new BorderLayout(5, 5));
-		this.getContentPane().add(new Header("Espace employe de la bibliotheque"), BorderLayout.NORTH);
+		Header headerEmploye = new Header("Espace employe de la bibliotheque");
+		headerEmploye.getLblHeaderSeConnecter().setText("Se deconnecter");
+		this.getContentPane().add(headerEmploye, BorderLayout.NORTH);
 
 		// Creation du tabbedPane
 		JTabbedPane tabEspaceEmploye = new JTabbedPane(JTabbedPane.TOP);
