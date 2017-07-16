@@ -3,6 +3,7 @@ package fenetres;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -11,10 +12,12 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 
 public class FenetreConnexion extends JFrame {
 
@@ -85,25 +88,29 @@ public class FenetreConnexion extends JFrame {
 	}
 
 	//Methodes
-	//	private void connexion(String login) {
-	//		if(login.equals("root") && getPwdFieldConnexion().getPassword()) {
-	//			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-	//			Rectangle tailleEcran = ge.getMaximumWindowBounds();
-	//			FenetreEmploye fenetreEmploye = new FenetreEmploye();
-	//			fenetreEmploye.setSize(tailleEcran.getSize());
-	//			fenetreEmploye.setVisible(true);
-	//		}
-	//	}
+	private void connexion(String login, String password) {
+		if(login.equals("root") && password.equals("toor")) {
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+			Rectangle tailleEcran = ge.getMaximumWindowBounds();
+			FenetreEmploye fenetreEmploye = new FenetreEmploye();
+			fenetreEmploye.setSize(tailleEcran.getSize());
+			fenetreEmploye.setVisible(true);
+			fenetreEmploye.setAlwaysOnTop(true);
+			this.setVisible(false);
+		}else{
+			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
+		}
+	}
 
 	//Actions listeners
 	private class appActionListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnConnexionValider) {
-				//connexion(getTextFieldConnexionIdentifiant().getText());
+				connexion(getTextFieldConnexionIdentifiant().getText(), String.valueOf(getPwdFieldConnexion().getPassword()));
 			}
 			if(e.getSource() == btnConnexionAnnuler) {
-				//dispose();
+				dispose();
 			}
 		}
 
