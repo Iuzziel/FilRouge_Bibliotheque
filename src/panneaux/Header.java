@@ -88,7 +88,7 @@ public class Header extends JPanel {
 			}
 		}
 	}
-	
+
 	class AppMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {

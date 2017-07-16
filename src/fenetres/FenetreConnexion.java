@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -24,6 +26,8 @@ public class FenetreConnexion extends JFrame {
 	// Donnees membre
 	private JTextField textFieldConnexionIdentifiant;
 	private JPasswordField pwdFieldConnexion;
+	private JButton btnConnexionValider = new JButton("Valider");
+	private	JButton btnConnexionAnnuler = new JButton("Annuler");
 
 	// Constructeur de la fenetre
 	public FenetreConnexion() {
@@ -73,10 +77,35 @@ public class FenetreConnexion extends JFrame {
 		// Panel des boutton
 		JPanel panConnexionBtn = new JPanel();
 		panConnexionIdPass.add(panConnexionBtn);
-		JButton btnConnexionValider = new JButton("Valider");
 		panConnexionBtn.add(btnConnexionValider);
-		JButton btnConnexionAnnuler = new JButton("Annuler");
+		btnConnexionValider.addActionListener(new appActionListener());
 		panConnexionBtn.add(btnConnexionAnnuler);
+		btnConnexionAnnuler.addActionListener(new appActionListener());
+
+	}
+
+	//Methodes
+	//	private void connexion(String login) {
+	//		if(login.equals("root") && getPwdFieldConnexion().getPassword()) {
+	//			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+	//			Rectangle tailleEcran = ge.getMaximumWindowBounds();
+	//			FenetreEmploye fenetreEmploye = new FenetreEmploye();
+	//			fenetreEmploye.setSize(tailleEcran.getSize());
+	//			fenetreEmploye.setVisible(true);
+	//		}
+	//	}
+
+	//Actions listeners
+	private class appActionListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == btnConnexionValider) {
+				//connexion(getTextFieldConnexionIdentifiant().getText());
+			}
+			if(e.getSource() == btnConnexionAnnuler) {
+				//dispose();
+			}
+		}
 
 	}
 

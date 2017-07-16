@@ -25,7 +25,7 @@ public class CreerUnAdherent extends JFrame {
 	//Constructeur
 	public CreerUnAdherent () {
 		this.setMinimumSize(new Dimension(500, 300));
-		this.setSize(500, 400);
+		this.setSize(550, 350);
 		this.setTitle("Creation d'un nouvel adherent");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);

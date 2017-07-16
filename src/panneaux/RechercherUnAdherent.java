@@ -16,7 +16,7 @@ public class RechercherUnAdherent extends JPanel {
 	private static final long serialVersionUID = -3793794312904965025L;
 
 	// Donnees membre
-	// TODO Penser a  changer avec getter et setter dans le code final
+	// TODO Penser a changer avec getter et setter dans le code final
 	private JTextField textFieldNom;
 	private JTextField textFieldPrenom;
 	private JTextField textFieldNumeroAdherent;
@@ -100,7 +100,7 @@ public class RechercherUnAdherent extends JPanel {
 		panRechercheResultats.add(panResultatAdherent);
 		panResultatAdherent.setLayout(new BorderLayout(5, 5));
 
-		// Creation label, de la Jtable, association a  la JScrollPane, puis ajout dans le panel, ensuite boutons et leur panel
+		// Creation label, de la Jtable, association a la JScrollPane, puis ajout dans le panel, ensuite boutons et leur panel
 		// TODO Remplir la JTable
 		JLabel lblRenvoiResultatsTitre = new JLabel("Adh\u00E9rent(s) correspondant(s) :");
 		panResultatAdherent.add(lblRenvoiResultatsTitre, BorderLayout.NORTH);
@@ -113,7 +113,7 @@ public class RechercherUnAdherent extends JPanel {
 					{null, null, null, null, null},
 				},
 				new String[] {
-						"N°", "Nom", "Prenom", "Adresse", "Date de naissance"
+						"N\u00B0", "Nom", "Prenom", "Adresse", "Date de naissance"
 				}
 				));
 		tabRenvoiResultatsAdherent.setPreferredSize(new Dimension(60, 100));
@@ -229,7 +229,7 @@ public class RechercherUnAdherent extends JPanel {
 					{null, null, null, null, null, null},
 				},
 				new String[] {
-						"N°", "Titre", "Auteur", "Date emprunt", "Retour prevu", "Retour"
+						"N\u00B0", "Titre", "Auteur", "Date emprunt", "Retour prevu", "Retour"
 				}
 				));
 		tabAdherentLivreEmprunte.setPreferredSize(new Dimension(50, 50));
@@ -257,6 +257,7 @@ public class RechercherUnAdherent extends JPanel {
 				panInfoAdherentPersoBtn.removeAll();
 				panInfoAdherentPersoBtn.add(new JButton("Valider"));
 				panInfoAdherentPersoBtn.add(btnAnnulerEdition);
+				panInfoAdherentPersoBtn.validate();
 				panInfoAdherentPersoBtn.repaint();
 			}
 			if(e.getSource() == btnAnnulerEdition) {
