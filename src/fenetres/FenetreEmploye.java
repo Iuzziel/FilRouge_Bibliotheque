@@ -55,7 +55,6 @@ public class FenetreEmploye extends JWindow {
 		tabAdmin.setLayout(new GridLayout(2, 2, 5, 5));
 		tabEspaceEmploye.addTab("Gestion des comptes employ\u00E9s", null, tabAdmin, null);
 
-		//TODO Remplissage des onglets
 		// *********************************************Tab gestion des	emprunts*********************************//
 		// Creation Panel du haut
 		JPanel panTabGestEmpruntHaut = new JPanel();

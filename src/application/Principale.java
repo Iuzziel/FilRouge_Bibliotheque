@@ -2,9 +2,7 @@ package application;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-
 import javax.swing.UIManager;
-
 import fenetres.*;
 
 public class Principale {
