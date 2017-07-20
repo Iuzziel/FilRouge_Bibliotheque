@@ -6,24 +6,27 @@ import javax.swing.UIManager;
 import fenetres.*;
 
 public class Principale {
+	//Donnees static de l'application
+	public static FenetreClient fenetrePrincipale;
+
 	//*********************************Début de la Main*********************************//
 	public static void main (String [] args){
+		//Recuperation de l'ui systeme hote
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}catch(Exception e) {
 			System.out.println("echec du chargement lookAndFeel systeme");
 		}
-		FenetreClient fenetre = new FenetreClient();
+		fenetrePrincipale = new FenetreClient();
 
+		//recuperation de la resolution de la taille de l'affichage
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		Rectangle tailleEcran = ge.getMaximumWindowBounds();
 
-		fenetre.setSize(tailleEcran.getSize());
-		fenetre.setVisible(true);
+		fenetrePrincipale.setSize(tailleEcran.getSize());
+		fenetrePrincipale.setVisible(true);
+		fenetrePrincipale.setAlwaysOnTop(true);
 
-		//FenetreEmploye fenetreEmploye = new FenetreEmploye();
-		//fenetreEmploye.setSize(tailleEcran.getSize());
-		//fenetreEmploye.setVisible(true);
 	}
 
 }

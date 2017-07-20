@@ -25,7 +25,7 @@ public class Header extends JPanel {
 	// ***********************************************Donnees membre*****************************************//
 	private JLabel lblHeaderSeConnecter = new JLabel("Se connecter");
 	private JButton btnQuitter = new JButton("Quitter");
-
+	private static FenetreConnexion fenetreConnexion = new FenetreConnexion();
 
 	// ***********************************************Constructeur*****************************************//
 	/**
@@ -48,6 +48,9 @@ public class Header extends JPanel {
 		JPanel panHeaderConnexion = new JPanel();
 		panHeaderConnexion.setBorder(new TitledBorder(null, "Fonction avanc\u00E9e", TitledBorder.LEADING, TitledBorder.TOP));
 		add(panHeaderConnexion, BorderLayout.EAST);
+
+		//Initialisation de la fenetre de connexion
+		fenetreConnexion.setVisible(false);
 
 		// Panneau de connexion/*
 		JLabel lblIconeConnexion = new JLabel("");
@@ -77,6 +80,9 @@ public class Header extends JPanel {
 	public void setLblHeaderSeConnecter(JLabel lblHeaderSeConnecter) {
 		this.lblHeaderSeConnecter = lblHeaderSeConnecter;
 	}
+	public FenetreConnexion getFenetreConnexion() {
+		return fenetreConnexion;
+	}
 
 	// ***********************************************Listerners*****************************************//
 	class AppActionListener implements ActionListener {
@@ -94,13 +100,13 @@ public class Header extends JPanel {
 		public void mouseClicked(MouseEvent e) {
 			// Auto-generated method stub
 			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se connecter")) {
-				FenetreConnexion fenetreConnexion = new FenetreConnexion();
-				fenetreConnexion.setLocationRelativeTo(null);
+				fenetreConnexion = new FenetreConnexion();
 				fenetreConnexion.setVisible(true);
+				fenetreConnexion.setLocationRelativeTo(null);
 				fenetreConnexion.setAlwaysOnTop(true);
 			}
 			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se deconnecter")) {
-				System.exit(0);
+				fenetreConnexion.setEstConnecte(false);
 			}
 		}
 
