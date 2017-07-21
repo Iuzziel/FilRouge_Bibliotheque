@@ -3,13 +3,14 @@ package fenetres;
 import panneaux.*;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JWindow;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
-public class FenetreEmploye extends JWindow {
+public class PartieEmploye extends JPanel {
 
 	/**
 	 * 
@@ -17,23 +18,23 @@ public class FenetreEmploye extends JWindow {
 	private static final long serialVersionUID = -6154275497867212254L;
 
 	// Constructeur de la fenetre
-	public FenetreEmploye() {
-		//this.setTitle("Bienvenu dans le logiciel de la bibliotheque");
+	public PartieEmploye() {
 		this.setMinimumSize(new Dimension(800, 600));
-		this.setSize(1024, 768);
-		//this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setLocation(0, 0);
-		//this.setLocationRelativeTo(null);
-		//this.setResizable(true);
-		this.getContentPane().setLayout(new BorderLayout(5, 5));
+		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		this.setLayout(new BorderLayout(5, 5));
+		this.setVisible(true);
+
+		// Creation des modules composants ce Panel
+		
+		// Header
 		Header headerEmploye = new Header("Espace employe de la bibliotheque");
 		headerEmploye.getLblHeaderSeConnecter().setText("Se deconnecter");
-		this.getContentPane().add(headerEmploye, BorderLayout.NORTH);
+		this.add(headerEmploye, BorderLayout.NORTH);
 
 		// Creation du tabbedPane
 		JTabbedPane tabEspaceEmploye = new JTabbedPane(JTabbedPane.TOP);
 		tabEspaceEmploye.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		getContentPane().add(tabEspaceEmploye, BorderLayout.CENTER);
+		this.add(tabEspaceEmploye, BorderLayout.CENTER);
 
 		// Creation des onglets
 		// Creation des onglets/tabGestEmprunt

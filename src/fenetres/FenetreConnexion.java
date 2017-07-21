@@ -12,12 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 
 public class FenetreConnexion extends JFrame {
 
@@ -31,6 +29,7 @@ public class FenetreConnexion extends JFrame {
 	private JPasswordField pwdFieldConnexion;
 	private JButton btnConnexionValider = new JButton("Valider");
 	private	JButton btnConnexionAnnuler = new JButton("Annuler");
+	private boolean estConnecte = false;
 
 	// Constructeur de la fenetre
 	public FenetreConnexion() {
@@ -39,6 +38,7 @@ public class FenetreConnexion extends JFrame {
 		setMaximumSize(new Dimension(400, 400));
 		getContentPane().setLayout(new BorderLayout(5, 5));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setVisible(true);
 
 		// Titre
 		JLabel lblConnexionAuxComptes = new JLabel("Connexion aux comptes Employ\u00E9s :");
@@ -88,18 +88,15 @@ public class FenetreConnexion extends JFrame {
 	}
 
 	//Methodes
-	private void connexion(String login, String password) {
+	private boolean connexion(String login, String password) {
 		if(login.equals("root") && password.equals("toor")) {
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-			Rectangle tailleEcran = ge.getMaximumWindowBounds();
-			FenetreEmploye fenetreEmploye = new FenetreEmploye();
-			fenetreEmploye.setSize(tailleEcran.getSize());
-			fenetreEmploye.setVisible(true);
-			fenetreEmploye.setAlwaysOnTop(true);
 			this.setVisible(false);
+			estConnecte = true;
 		}else{
+			estConnecte = false;
 			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
 		}
+		return estConnecte;
 	}
 
 	//Actions listeners
@@ -131,6 +128,13 @@ public class FenetreConnexion extends JFrame {
 
 	public void setPwdFieldConnexion(JPasswordField pwdFieldConnexion) {
 		this.pwdFieldConnexion = pwdFieldConnexion;
+	}
+
+	public boolean isEstConnecte() {
+		return estConnecte;
+	}
+	public void setEstConnecte(boolean estConnecte) {
+		this.estConnecte = estConnecte;
 	}
 
 }

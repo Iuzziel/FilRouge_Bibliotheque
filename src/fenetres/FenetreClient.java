@@ -1,50 +1,80 @@
 package fenetres;
 
+import javax.swing.JPanel;
 import javax.swing.JWindow;
-import panneaux.Header;
-import panneaux.InformationLivre;
-import panneaux.RechercherUnLivre;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 public class FenetreClient extends JWindow {
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -629171735000729382L;
 
+	//Donnees membres
+	public static PartieVisiteur partieVisiteur;
+	public static PartieEmploye partieEmploye;
+	private TimerListener timerListener = new TimerListener();
+	private Timer timerFenetreClient = new Timer(1000, timerListener);
+	private JPanel fenetreClient = new JPanel();
+
+
 	// Constructeur de la fenetre
 	public FenetreClient() {
-		this.setMinimumSize(new Dimension(800, 600));
-		//this.setSize(1024, 768);
-		//this.setTitle("Bienvenu dans le logiciel de la bibliotheque");
-		//this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setLocation(0, 0);
-		//this.setResizable(true);
-		this.getContentPane().setLayout(new BorderLayout(5, 5));
+		fenetreClient = new JPanel();
+		this.getContentPane().add(fenetreClient);
+		fenetreClient.setMinimumSize(new Dimension(800, 600));
+		fenetreClient.setLayout(new BorderLayout(5, 5));
+		fenetreClient.setVisible(true);
 
-		// Creation des modules composant cette Frame
-		RechercherUnLivre moduleRechercheLivre = new RechercherUnLivre();
-		moduleRechercheLivre.setMaximumSize(new Dimension(500, 2147483647));
-		moduleRechercheLivre.setPreferredSize(new Dimension(250, 200));
-		moduleRechercheLivre.setMinimumSize(new Dimension(150, 200));
-		InformationLivre moduleInformationLivre = new InformationLivre();
-		moduleInformationLivre.setInformationLivreClient(true);
-		moduleInformationLivre.repaint();
-		Header moduleHeader = new Header("Espace visiteurs");
+		//timer de verification de connexion
+		timerFenetreClient.start();
 
-		this.getContentPane().add(moduleHeader, BorderLayout.NORTH);
-		this.getContentPane().add(moduleRechercheLivre, BorderLayout.WEST);
-		this.getContentPane().add(moduleInformationLivre, BorderLayout.CENTER);
+		//Par defaut l'application s'ouvrre sur la partie visiteur
+		partieVisiteur = new PartieVisiteur();
 
-		/*
-		 * TODO Mettre non editable avec les getter depuis le moduleRechercheLivre
-		 * JTextField textFieldTitre; JTextField textFieldAuteur; JTextField
-		 * textFieldTheme; JTextField textFieldEmplacement; JTextField textFieldISBN;
-		 * JTextField textFieldISSN; JTextField textFieldNbExemplaireDispo; JTextField
-		 * textFieldNbExemplaireDispoBiblio; JTextArea txtAreaComment;
-		 */
+		fenetreClient.add(partieVisiteur, BorderLayout.CENTER);
+		System.out.println("Constructeur atteint : Fenetre client");
 	}
 
+	//Accesseurs
+	public static PartieVisiteur getPartieVisiteur() {
+		return partieVisiteur;
+	}
+
+	public static void setPartieVisiteur(PartieVisiteur partieVisiteur) {
+		FenetreClient.partieVisiteur = partieVisiteur;
+	}
+
+	public static PartieEmploye getPartieEmploye() {
+		return partieEmploye;
+	}
+
+	public static void setPartieEmploye(PartieEmploye partieEmploye) {
+		FenetreClient.partieEmploye = partieEmploye;
+	}
+
+	//Listeners
+	//Timer de l'application, verifie toutes les 1000ms si la connexion à la partie employe est correct
+	//S'occupe aussi du remplissage de la fenetre principale, en fonction du statut de connexion
+	private class TimerListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(partieVisiteur.getModuleHeader().getFenetreConnexion().isEstConnecte()) {
+				fenetreClient.removeAll();
+				fenetreClient.add(partieEmploye = new PartieEmploye());
+				fenetreClient.validate();
+				fenetreClient.repaint();
+			}else {
+				fenetreClient.removeAll();
+				fenetreClient.add(partieVisiteur);
+				fenetreClient.validate();
+				fenetreClient.repaint();
+			}
+		}
+
+	}
 }
