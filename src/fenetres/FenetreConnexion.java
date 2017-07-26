@@ -88,15 +88,14 @@ public class FenetreConnexion extends JFrame {
 	}
 
 	//Methodes
-	private boolean connexion(String login, String password) {
+	private void connexion(String login, String password) {
 		if(login.equals("root") && password.equals("toor")) {
 			this.setVisible(false);
-			estConnecte = true;
+			FenetreClient.changerPartieClient();
 		}else{
-			estConnecte = false;
 			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
 		}
-		return estConnecte;
+		return;
 	}
 
 	//Actions listeners
