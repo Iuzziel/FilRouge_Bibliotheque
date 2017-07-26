@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.border.TitledBorder;
+
+import fenetres.FenetreClient;
 import fenetres.FenetreConnexion;
 import java.awt.Color;
 import java.awt.Font;
@@ -106,6 +108,7 @@ public class Header extends JPanel {
 				fenetreConnexion.setAlwaysOnTop(true);
 			}
 			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se deconnecter")) {
+				FenetreClient.changerPartieClient();
 				fenetreConnexion.setEstConnecte(false);
 			}
 		}
