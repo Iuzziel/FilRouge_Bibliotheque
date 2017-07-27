@@ -28,6 +28,7 @@ public class FenetreClient extends JWindow {
 
 		//Par defaut l'application s'ouvrre sur la partie visiteur
 		partieVisiteur = new PartieVisiteur();
+		partieEmploye = new PartieEmploye();
 		boolVisiteur = true;
 		fenetreClient.add(partieVisiteur, BorderLayout.CENTER);
 		System.out.println("Constructeur atteint : Fenetre client");
@@ -36,12 +37,16 @@ public class FenetreClient extends JWindow {
 	//Methode
 	public static void changerPartieClient(){
 		if (boolVisiteur) {
+			boolVisiteur = false;
 			fenetreClient.remove(partieVisiteur);
+			fenetreClient.repaint();
 			fenetreClient.add(partieEmploye);
 			fenetreClient.validate();
 			fenetreClient.repaint();
 		}else{
+			boolVisiteur = true;
 			fenetreClient.remove(partieEmploye);
+			fenetreClient.repaint();
 			fenetreClient.add(partieVisiteur);
 			fenetreClient.validate();
 			fenetreClient.repaint();
