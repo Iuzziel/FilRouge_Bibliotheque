@@ -1,5 +1,6 @@
 package fenetres;
 
+import application.Principale;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -91,9 +92,18 @@ public class FenetreConnexion extends JFrame {
 	private void connexion(String login, String password) {
 		if(login.equals("root") && password.equals("toor")) {
 			this.setVisible(false);
-			FenetreClient.changerPartieClient();
+			Principale.fenetrePrincipale.removeAll();
+			Principale.fenetrePrincipale.add(FenetreClient.partieEmploye = new PartieEmploye());
+			Principale.fenetrePrincipale.validate();
+			Principale.fenetrePrincipale.repaint();
+			setEstConnecte(true);
 		}else{
+			Principale.fenetrePrincipale.removeAll();
+			Principale.fenetrePrincipale.add(FenetreClient.partieVisiteur);
+			Principale.fenetrePrincipale.validate();
+			Principale.fenetrePrincipale.repaint();
 			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
+			setEstConnecte(false);
 		}
 		return;
 	}
