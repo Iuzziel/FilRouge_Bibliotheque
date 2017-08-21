@@ -9,7 +9,7 @@ public class Principale {
 	//Donnees static de l'application
 	public static FenetreClient fenetrePrincipale;
 
-	//*********************************Début de la Main*********************************//
+	//*********************************DÃ©but de la Main*********************************//
 	public static void main (String [] args){
 		//Recuperation de l'ui systeme hote
 		try{
@@ -26,7 +26,5 @@ public class Principale {
 		fenetrePrincipale.setSize(tailleEcran.getSize());
 		fenetrePrincipale.setVisible(true);
 		fenetrePrincipale.setAlwaysOnTop(true);
-
 	}
-
 }
