@@ -25,6 +25,8 @@ public class RechercherUnAdherent extends JPanel {
 	private JTextField txtFieldInfoAdresse;
 	private JTextField txtFieldInfoDateCoti;
 	private JTextField txtFieldInfoCotiOk;
+	private String [] cols = {"Num adherent", "Nom", "Prenom", "Adresse", "DateNaiss", "DateDerCoti"};
+	private DefaultTableModel listData = new DefaultTableModel(cols, 0);
 	private JTable tabRenvoiResultatsAdherent;
 	private JTable tabAdherentLivreEmprunte;
 	private JTextField txtFieldPenaliteEnCours;
@@ -104,18 +106,7 @@ public class RechercherUnAdherent extends JPanel {
 		// TODO Remplir la JTable
 		JLabel lblRenvoiResultatsTitre = new JLabel("Adh\u00E9rent(s) correspondant(s) :");
 		panResultatAdherent.add(lblRenvoiResultatsTitre, BorderLayout.NORTH);
-		tabRenvoiResultatsAdherent = new JTable();
-		tabRenvoiResultatsAdherent.setModel(new DefaultTableModel(
-				new Object[][] {
-					{null, null, null, null, null},
-					{null, null, null, null, null},
-					{null, null, null, null, null},
-					{null, null, null, null, null},
-				},
-				new String[] {
-						"N\u00B0", "Nom", "Prenom", "Adresse", "Date de naissance"
-				}
-				));
+		tabRenvoiResultatsAdherent = new JTable(listData);
 		tabRenvoiResultatsAdherent.setPreferredSize(new Dimension(60, 100));
 
 		JScrollPane srlTabRenvoiResultatsAdherent = new JScrollPane(tabRenvoiResultatsAdherent);

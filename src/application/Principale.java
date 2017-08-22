@@ -9,7 +9,7 @@ public class Principale {
 	//Donnees static de l'application
 	public static FenetrePrincipale fenetrePrincipale;
 
-	//*********************************DÃ©but de la Main*********************************//
+	//*********************************Debut de la Main*********************************//
 	public static void main (String [] args){
 		//Recuperation de l'ui systeme hote
 		try{
