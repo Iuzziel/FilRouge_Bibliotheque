@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-public class FenetreClient extends JFrame {
+public final class FenetreClient extends JFrame {
 	/**
 	 * 
 	 */
