@@ -7,7 +7,7 @@ import fenetres.*;
 
 public class Principale {
 	//Donnees static de l'application
-	public static FenetreClient fenetrePrincipale;
+	public static FenetrePrincipale fenetrePrincipale;
 
 	//*********************************DÃ©but de la Main*********************************//
 	public static void main (String [] args){
@@ -17,7 +17,7 @@ public class Principale {
 		}catch(Exception e) {
 			System.out.println("echec du chargement lookAndFeel systeme");
 		}
-		fenetrePrincipale = new FenetreClient();
+		fenetrePrincipale = new FenetrePrincipale();
 
 		//recuperation de la resolution de la taille de l'affichage
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 

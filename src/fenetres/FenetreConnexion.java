@@ -1,6 +1,5 @@
 package fenetres;
 
-import application.Principale;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -30,7 +29,7 @@ public class FenetreConnexion extends JFrame {
 	private JPasswordField pwdFieldConnexion;
 	private JButton btnConnexionValider = new JButton("Valider");
 	private	JButton btnConnexionAnnuler = new JButton("Annuler");
-	private boolean estConnecte = false;
+	private static boolean estConnecte = false;
 
 	// Constructeur de la fenetre
 	public FenetreConnexion() {
@@ -92,19 +91,11 @@ public class FenetreConnexion extends JFrame {
 	private void connexion(String login, String password) {
 		if(login.equals("root") && password.equals("toor")) {
 			this.setVisible(false);
-			Principale.fenetrePrincipale.remove(FenetreClient.partieVisiteur);
-			FenetreClient.setPartieEmploye(new PartieEmploye());
-			Principale.fenetrePrincipale.add(FenetreClient.partieEmploye);
-			Principale.fenetrePrincipale.validate();
-			Principale.fenetrePrincipale.repaint();
 			setEstConnecte(true);
+			FenetrePrincipale.changerPartieClient();
 		}else{
-			Principale.fenetrePrincipale.remove(FenetreClient.partieEmploye);
-			Principale.fenetrePrincipale.add(FenetreClient.partieVisiteur);
-			Principale.fenetrePrincipale.validate();
-			Principale.fenetrePrincipale.repaint();
-			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
 			setEstConnecte(false);
+			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
 		}
 		return;
 	}
@@ -140,11 +131,11 @@ public class FenetreConnexion extends JFrame {
 		this.pwdFieldConnexion = pwdFieldConnexion;
 	}
 
-	public boolean isEstConnecte() {
+	public static boolean isEstConnecte() {
 		return estConnecte;
 	}
-	public void setEstConnecte(boolean estConnecte) {
-		this.estConnecte = estConnecte;
+	public static void setEstConnecte(boolean estConnecte) {
+		FenetreConnexion.estConnecte = estConnecte;
 	}
 
 }
