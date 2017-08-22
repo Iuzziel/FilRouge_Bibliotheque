@@ -92,13 +92,14 @@ public class FenetreConnexion extends JFrame {
 	private void connexion(String login, String password) {
 		if(login.equals("root") && password.equals("toor")) {
 			this.setVisible(false);
-			Principale.fenetrePrincipale.removeAll();
-			Principale.fenetrePrincipale.add(FenetreClient.partieEmploye = new PartieEmploye());
+			Principale.fenetrePrincipale.remove(FenetreClient.partieVisiteur);
+			FenetreClient.setPartieEmploye(new PartieEmploye());
+			Principale.fenetrePrincipale.add(FenetreClient.partieEmploye);
 			Principale.fenetrePrincipale.validate();
 			Principale.fenetrePrincipale.repaint();
 			setEstConnecte(true);
 		}else{
-			Principale.fenetrePrincipale.removeAll();
+			Principale.fenetrePrincipale.remove(FenetreClient.partieEmploye);
 			Principale.fenetrePrincipale.add(FenetreClient.partieVisiteur);
 			Principale.fenetrePrincipale.validate();
 			Principale.fenetrePrincipale.repaint();
