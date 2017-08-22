@@ -16,13 +16,12 @@ public final class FenetreClient extends JFrame {
 	public static PartieEmploye partieEmploye;
 	//private TimerListener timerListener = new TimerListener();
 	//private Timer timerFenetreClient = new Timer(1000, timerListener);
-	private JPanel fenetreClient = new JPanel();
+	private static JPanel fenetreClient;
 
 
 	// Constructeur de la fenetre
 	public FenetreClient() {
-		fenetreClient = new JPanel();
-		this.getContentPane().add(fenetreClient);
+		fenetreClient = (JPanel) this.getContentPane();
 		fenetreClient.setMinimumSize(new Dimension(800, 600));
 		fenetreClient.setLayout(new BorderLayout(5, 5));
 		fenetreClient.setVisible(true);
