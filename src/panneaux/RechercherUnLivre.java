@@ -3,12 +3,19 @@ package panneaux;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import dao.*;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.sql.SQLException;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.border.BevelBorder;
@@ -27,9 +34,13 @@ public class RechercherUnLivre extends JPanel {
 	private JTextField textFieldAuteur;
 	private JTextField textFieldTheme;
 	private JTextField textFieldExemplaire;
-	private JTable tabRenvoiResultatsLivre;
+	private String [] cols = {"NUM_EXEMPLAIRE", "TITRE", "AUTEUR", "BIBLIOTHEQUE", "ETAT"};
+	private DefaultTableModel listData = new DefaultTableModel(cols, 0);
+	private JTable tabRenvoiResultatsLivre = new JTable(listData);
 	private JScrollPane srlTabRenvoiResultatsLivre;
 	private JPanel panRechercheBoutton = new JPanel();
+	private JLabel lblRechercheStatus = new JLabel("");
+	private Exemplaire tempRecherExemp;
 
 	// Constructeur
 	public RechercherUnLivre() {
@@ -109,18 +120,6 @@ public class RechercherUnLivre extends JPanel {
 		JLabel lblRenvoiResultatsTitre = new JLabel("Livre(s) correspondant(s) :");
 		panResultats.add(lblRenvoiResultatsTitre, BorderLayout.NORTH);
 
-		// TODO Remplir la JTable avec 2 vectors
-		tabRenvoiResultatsLivre = new JTable();
-		tabRenvoiResultatsLivre.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Titre 1", "Auteur 1", "Exemplaire 1", "Oui", "rue machin"},
-				{"Titre 2", "Auteur 2", "Exemplaire 1", "Non", "rue machin"},
-				{"Titre 2", "Auteur 2", "Exemplaire 2", "Oui", "rue chose"},
-			},
-			new String[] {
-				"Titre", "Auteur", "N\u00B0Exemplaire", "Disponible", "Bibliotheque"
-			}
-		));
 		srlTabRenvoiResultatsLivre = new JScrollPane(tabRenvoiResultatsLivre);
 		srlTabRenvoiResultatsLivre.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panResultats.add(srlTabRenvoiResultatsLivre, BorderLayout.CENTER);
@@ -128,63 +127,120 @@ public class RechercherUnLivre extends JPanel {
 		// Bouton +d'info et son panel
 		JPanel panResultatsBtnPlusInfos = new JPanel();
 		panResultats.add(panResultatsBtnPlusInfos, BorderLayout.SOUTH);
+		lblRechercheStatus.setForeground(Color.RED);
+		panResultatsBtnPlusInfos.add(lblRechercheStatus);
 		JButton btnResultatsPlusInfos = new JButton("+ d'infos");
 		panResultatsBtnPlusInfos.add(btnResultatsPlusInfos);
 
+		//Abonnement aux Listeners
+		textFieldExemplaire.addActionListener(new appActionListener());
+	}
+	
+	// Listener
+	class AppKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// Auto-generated method stub
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// Auto-generated method stub
+		}
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// Auto-generated method stub
+		}
 	}
 
-	// **********************************Accesseurs**********************************//
-	public JTextField getTextFieldTitre() {
-		return textFieldTitre;
-	}
-
-	public void setTextFieldTitre(JTextField textFieldTitre) {
-		this.textFieldTitre = textFieldTitre;
-	}
-
-	public JTextField getTextFieldAuteur() {
-		return textFieldAuteur;
-	}
-
-	public void setTextFieldAuteur(JTextField textFieldAuteur) {
-		this.textFieldAuteur = textFieldAuteur;
-	}
-
-	public JTextField getTextFieldTheme() {
-		return textFieldTheme;
-	}
-
-	public void setTextFieldTheme(JTextField textFieldTheme) {
-		this.textFieldTheme = textFieldTheme;
-	}
-
-	public JTextField getTextFieldExemplaire() {
-		return textFieldExemplaire;
-	}
-
-	public void setTextFieldExemplaire(JTextField textFieldExemplaire) {
-		this.textFieldExemplaire = textFieldExemplaire;
-	}
-
-	public JTable getTabRenvoiResultatsLivre() {
-		return tabRenvoiResultatsLivre;
-	}
-
-	public void setTabRenvoiResultatsLivre(JTable tabRenvoiResultatsLivre) {
-		this.tabRenvoiResultatsLivre = tabRenvoiResultatsLivre;
-	}
-
-	public JPanel getPanRechercheBoutton() {
-		return panRechercheBoutton;
-	}
-
-	public void setPanRechercheBoutton(JPanel panRechercheBoutton) {
-		this.panRechercheBoutton = panRechercheBoutton;
+	public class appActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == textFieldExemplaire){
+				textFieldExemplaire_click();
+			}
+		}
 	}
 
 	// **********************************Methodes**********************************//
 	public void addBoutonCreerLivre() {
 		JButton ajouterLivre = new JButton("Ajouter un livre ");
 		panRechercheBoutton.add(ajouterLivre);
+	}
+	//Recherche par numero d'exemplaire
+	public void textFieldExemplaire_click() {
+		try {
+			listData.setRowCount(0);
+			tempRecherExemp = ExemplaireManager.getExemplaire(new Exemplaire(Integer.valueOf(textFieldExemplaire.getText())));
+			if (tempRecherExemp != null) {
+				listData.addRow(tempRecherExemp.toVector());
+				affichageInfo();
+			} else {
+				lblRechercheStatus.setText("Pas d'exemplaire avec ce numero");
+				System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nPas d'exemplaire avec ce numero");
+			}
+		} catch (ClassNotFoundException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-Tag:1");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-Tag:2");
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			lblRechercheStatus.setText("Ce n'est pas un numero d'exemplaire valide");
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nCe n'est pas un numero d'exemplaire valide");
+		}
+	}
+	//Remplissage de la partie info en fonction de la listData
+	private void affichageInfo() {
+		textFieldTitre.setText(new Livre(tempRecherExemp.getNum_livre()).getTitre());
+		textFieldAuteur.setText((new Livre(tempRecherExemp.getNum_livre()).getNum_auteur()));
+		textFieldTheme.setText(new Livre(tempRecherExemp.getNum_livre()).getTitre());
+	}
+	// **********************************Accesseurs**********************************//
+	public JTextField getTextFieldTitre() {
+		return textFieldTitre;
+	}
+	
+	public void setTextFieldTitre(JTextField textFieldTitre) {
+		this.textFieldTitre = textFieldTitre;
+	}
+	
+	public JTextField getTextFieldAuteur() {
+		return textFieldAuteur;
+	}
+	
+	public void setTextFieldAuteur(JTextField textFieldAuteur) {
+		this.textFieldAuteur = textFieldAuteur;
+	}
+	
+	public JTextField getTextFieldTheme() {
+		return textFieldTheme;
+	}
+	
+	public void setTextFieldTheme(JTextField textFieldTheme) {
+		this.textFieldTheme = textFieldTheme;
+	}
+	
+	public JTextField getTextFieldExemplaire() {
+		return textFieldExemplaire;
+	}
+	
+	public void setTextFieldExemplaire(JTextField textFieldExemplaire) {
+		this.textFieldExemplaire = textFieldExemplaire;
+	}
+	
+	public JTable getTabRenvoiResultatsLivre() {
+		return tabRenvoiResultatsLivre;
+	}
+	
+	public void setTabRenvoiResultatsLivre(JTable tabRenvoiResultatsLivre) {
+		this.tabRenvoiResultatsLivre = tabRenvoiResultatsLivre;
+	}
+	
+	public JPanel getPanRechercheBoutton() {
+		return panRechercheBoutton;
+	}
+	
+	public void setPanRechercheBoutton(JPanel panRechercheBoutton) {
+		this.panRechercheBoutton = panRechercheBoutton;
 	}
 }

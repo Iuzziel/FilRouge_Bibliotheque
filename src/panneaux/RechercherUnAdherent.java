@@ -322,7 +322,8 @@ public class RechercherUnAdherent extends JPanel {
 			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nCe n'est pas un numero adherent valide");
 		}
 	}
-
+	
+	//Remplissage de la partie info en fonction de la listData
 	private void affichageInfo() {
 		txtFieldInfoNom.setText(String.valueOf(listData.getValueAt(0, 1)));
 		txtFieldInfoPrenom.setText(String.valueOf(listData.getValueAt(0, 2)));
