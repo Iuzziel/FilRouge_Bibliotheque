@@ -191,9 +191,14 @@ public class RechercherUnLivre extends JPanel {
 	}
 	//Remplissage de la partie info en fonction de la listData
 	private void affichageInfo() {
-		textFieldTitre.setText(new Livre(tempRecherExemp.getNum_livre()).getTitre());
-		textFieldAuteur.setText((new Livre(tempRecherExemp.getNum_livre()).getNum_auteur()));
-		textFieldTheme.setText(new Livre(tempRecherExemp.getNum_livre()).getTitre());
+		int num = tempRecherExemp.getNum_livre();
+		Livre liv = new Livre(num);
+		textFieldTitre.setText(liv.getTitre());
+		Auteur aut = new Auteur(liv.getNum_auteur());
+		textFieldAuteur.setText(aut.toString());
+		Theme thm = new Theme(liv.getNum_theme());
+		textFieldTheme.setText(thm.getTheme());
+		System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nMethode affichageInfo()");
 	}
 	// **********************************Accesseurs**********************************//
 	public JTextField getTextFieldTitre() {
