@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Vector;
 
 public class Adherent {
-	private String num_adherent;
+	private int num_adherent;
 	private String adherNom;
 	private String adherPrenom;
 	private String adherAdresse;
@@ -13,11 +13,11 @@ public class Adherent {
 	private Date adherDateCoti;
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	public Adherent (String num_adherent){
+	public Adherent (int num_adherent){
 		this.num_adherent = num_adherent;
 	}
 
-	public Adherent (String num_adherent, String adherNom, String adherPrenom, String adherAdresse, Date adherDateNaiss, Date adherDateCoti){
+	public Adherent (int num_adherent, String adherNom, String adherPrenom, String adherAdresse, Date adherDateNaiss, Date adherDateCoti){
 		this.num_adherent = num_adherent;
 		this.adherNom = adherNom;
 		this.adherPrenom = adherPrenom;
@@ -43,11 +43,11 @@ public class Adherent {
 		return v;
 	}
 
-	public String getNum_adherent() {
+	public int getNum_adherent() {
 		return num_adherent;
 	}
 
-	public void setNum_adherent(String num_adherent) {
+	public void setNum_adherent(int num_adherent) {
 		this.num_adherent = num_adherent;
 	}
 

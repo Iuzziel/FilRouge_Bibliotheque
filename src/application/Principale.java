@@ -15,7 +15,7 @@ public class Principale {
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}catch(Exception e) {
-			System.out.println("echec du chargement lookAndFeel systeme");
+			System.out.println("Pkg:application-Class:Principale\nEchec du chargement lookAndFeel systeme");
 		}
 		fenetrePrincipale = new FenetrePrincipale();
 
@@ -25,6 +25,6 @@ public class Principale {
 
 		fenetrePrincipale.setSize(tailleEcran.getSize());
 		fenetrePrincipale.setVisible(true);
-		fenetrePrincipale.setAlwaysOnTop(true);
+		//fenetrePrincipale.setAlwaysOnTop(true);
 	}
 }

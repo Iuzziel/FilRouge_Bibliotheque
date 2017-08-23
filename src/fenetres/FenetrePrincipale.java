@@ -18,6 +18,7 @@ public final class FenetrePrincipale extends JFrame {
 
 	// Constructeur de la fenetre
 	public FenetrePrincipale() {
+		this.setMinimumSize(new Dimension(800, 600));
 		contentPane = (JPanel) this.getContentPane();
 		contentPane.setMinimumSize(new Dimension(800, 600));
 		contentPane.setLayout(new BorderLayout(5, 5));
@@ -27,7 +28,7 @@ public final class FenetrePrincipale extends JFrame {
 		partieVisiteur = new PartieVisiteur();
 		
 		contentPane.add(partieVisiteur, BorderLayout.CENTER);
-		System.out.println("Constructeur atteint : Fenetre client");
+		System.out.println("Pkg:fenetres-Class:FenetrePrincipale\nConstructeur atteint : Fenetre client");
 	}
 
 	//Accesseurs

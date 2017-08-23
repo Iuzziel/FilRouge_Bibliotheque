@@ -1,6 +1,11 @@
 package panneaux;
 
+import dao.*;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -9,11 +14,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.BevelBorder;
+import java.awt.BorderLayout;
 
 public class EmpruntRetour extends JPanel {
 	/**
@@ -26,6 +31,12 @@ public class EmpruntRetour extends JPanel {
 	private JScrollPane srlLivreEmpruntScanne;
 	private JTable jTabLivreRetourScan;
 	private JScrollPane srlLivreRetourScanne;
+	private JButton btnEmprAjouter = new JButton("Ajouter");
+	private JButton btnEmprSupprimer = new JButton("Supprimer");
+	private JButton btnEmpruntEnregistrerFinal = new JButton("Valider Emprunt");
+	private JButton btnRetAjouter = new JButton("Ajouter");
+	private JButton btnRetSupprimer = new JButton("Supprimer");
+	private JButton btnValiderRetour = new JButton("Valider Retour");
 
 	// Constructeur
 	public EmpruntRetour() {
@@ -41,12 +52,16 @@ public class EmpruntRetour extends JPanel {
 		// tabEmpruntRetour/panEmprunt
 		JPanel panEmprunt = new JPanel();
 		tabEmpruntRetour.addTab("Emprunt", panEmprunt);
-		panEmprunt.setLayout(new BoxLayout(panEmprunt, BoxLayout.Y_AXIS));
 		panEmprunt.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		panEmprunt.setLayout(new BorderLayout(0, 0));
 
-		// tabEmpruntRetour/panEmprunt/*
+		JPanel panEmprCentre = new JPanel();
+		panEmprunt.add(panEmprCentre);
+		panEmprCentre.setLayout(new BoxLayout(panEmprCentre, BoxLayout.Y_AXIS));
+
+		// tabEmpruntRetour/panEmprunt/Centre
 		JLabel lblEmpruntTitre = new JLabel("Livre selectionne(s) : ");
-		panEmprunt.add(lblEmpruntTitre);
+		panEmprCentre.add(lblEmpruntTitre);
 		jTabLivreEmpruntScan = new JTable();
 		jTabLivreEmpruntScan.setModel(new DefaultTableModel(
 				new Object[][] {
@@ -59,22 +74,29 @@ public class EmpruntRetour extends JPanel {
 				}
 				));
 		srlLivreEmpruntScanne = new JScrollPane(jTabLivreEmpruntScan);
+		panEmprCentre.add(srlLivreEmpruntScanne);
 		srlLivreEmpruntScanne.setViewportBorder(new BevelBorder(BevelBorder.LOWERED));
-		panEmprunt.add(srlLivreEmpruntScanne);
-		JProgressBar pgsBarEmprunt = new JProgressBar();
-		panEmprunt.add(pgsBarEmprunt);
-		JButton btnEmpruntEnregistrerFinal = new JButton("Valider Emprunt");
-		panEmprunt.add(btnEmpruntEnregistrerFinal);
+
+		// tabEmpruntRetour/panEmprunt/Sud
+		JPanel panEmprSud = new JPanel();
+		panEmprunt.add(panEmprSud, BorderLayout.SOUTH);
+		panEmprSud.add(btnEmprAjouter);
+		panEmprSud.add(btnEmprSupprimer);
+		panEmprSud.add(btnEmpruntEnregistrerFinal);
 
 		// tabEmpruntRetour/panRetour
 		JPanel panRetour = new JPanel();
 		tabEmpruntRetour.addTab("Retour", panRetour);
-		panRetour.setLayout(new BoxLayout(panRetour, BoxLayout.Y_AXIS));
 		panRetour.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		panRetour.setLayout(new BorderLayout(0, 0));
 
-		// tabEmpruntRetour/panRetour/*
+		JPanel panRetCentre = new JPanel();
+		panRetour.add(panRetCentre, BorderLayout.CENTER);
+		panRetCentre.setLayout(new BoxLayout(panRetCentre, BoxLayout.Y_AXIS));
+
+		// tabEmpruntRetour/panRetour/Centre
 		JLabel lblRetourTitre = new JLabel("Livre selectionne(s) : ");
-		panRetour.add(lblRetourTitre);
+		panRetCentre.add(lblRetourTitre);
 		jTabLivreRetourScan = new JTable();
 		jTabLivreRetourScan.setModel(new DefaultTableModel(
 				new Object[][] {
@@ -87,12 +109,49 @@ public class EmpruntRetour extends JPanel {
 				}
 				));
 		srlLivreRetourScanne = new JScrollPane(jTabLivreRetourScan);
+		panRetCentre.add(srlLivreRetourScanne);
 		srlLivreRetourScanne.setViewportBorder(new BevelBorder(BevelBorder.LOWERED));
-		panRetour.add(srlLivreRetourScanne);
-		JProgressBar pgsBarRetour = new JProgressBar();
-		panRetour.add(pgsBarRetour);
-		JButton btnValiderRetour = new JButton("Valider Retour");
-		panRetour.add(btnValiderRetour);
+
+		// tabEmpruntRetour/panRetour/Sud
+		JPanel panRetSud = new JPanel();
+		panRetour.add(panRetSud, BorderLayout.SOUTH);
+		panRetSud.add(btnRetAjouter);
+		panRetSud.add(btnRetSupprimer);
+		panRetSud.add(btnValiderRetour);
+
+		//Abonnement aux listeners
+		btnEmprAjouter.addActionListener(new appActionListener());
+		btnEmprSupprimer.addActionListener(new appActionListener());
+		btnEmpruntEnregistrerFinal.addActionListener(new appActionListener());
+		btnRetAjouter.addActionListener(new appActionListener());
+		btnRetSupprimer.addActionListener(new appActionListener());
+		btnValiderRetour.addActionListener(new appActionListener());
+	}
+
+	//Actions listeners
+	private class appActionListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == btnEmprAjouter) {
+			}
+			if(e.getSource() == btnEmprSupprimer) {
+			}
+			if(e.getSource() == btnEmpruntEnregistrerFinal) {//TODO Temporairement un bouton test
+				try {
+					int temp = EmpruntManager.creerEmprunt(new Adherent(1));
+					System.out.println("Pkg:panneaux-Class:EmpruntRetour\nValeur de la seq : " + temp);
+				} catch (ClassNotFoundException | SQLException e1) {
+					System.out.println("Pkg:panneaux-Class:EmpruntRetour");
+					e1.printStackTrace();
+				}
+			}
+			if(e.getSource() == btnRetAjouter) {
+			}
+			if(e.getSource() == btnRetSupprimer) {
+			}
+			if(e.getSource() == btnValiderRetour) {
+			}
+		}
 	}
 
 	// Methodes

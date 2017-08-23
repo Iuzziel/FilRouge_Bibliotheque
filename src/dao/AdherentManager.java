@@ -1,6 +1,8 @@
 package dao;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AdherentManager {
 
@@ -15,20 +17,20 @@ public class AdherentManager {
 	public static Adherent getAdherent(Adherent adherent) 
 			throws ClassNotFoundException, SQLException{
 
-		Adherent tmp=null;
+		Adherent tmp = null;
 
 		String sql = "SELECT * FROM adherent WHERE num_adherent = ?";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setString(1, adherent.getNum_adherent());
+		stm.setInt(1, adherent.getNum_adherent());
 
 		ResultSet rs = stm.executeQuery();
 
 		if(rs.next())
 		{
-			tmp = new Adherent(rs.getString("num_adherent"),
+			tmp = new Adherent(rs.getInt("num_adherent"),
 					rs.getString("adherNom"),
 					rs.getString("adherPrenom"),
 					rs.getString("adherAdresse"),

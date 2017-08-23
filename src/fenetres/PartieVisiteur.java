@@ -35,7 +35,7 @@ public class PartieVisiteur extends JPanel{
 		this.add(moduleRechercheLivre, BorderLayout.WEST);
 		this.add(moduleInformationLivre, BorderLayout.CENTER);
 
-		System.out.println("Constructeur atteint : Partie client");
+		System.out.println("Pkg:fenetres-Class:PartieVisiteur\nConstructeur atteint : Partie client");
 		/*
 		 * TODO Mettre non editable avec les getter depuis le moduleRechercheLivre
 		 * JTextField textFieldTitre; JTextField textFieldAuteur; JTextField
