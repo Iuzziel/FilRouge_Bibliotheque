@@ -59,45 +59,43 @@ public class EmpruntManager {
 		stm.setInt(1, adherent.getNum_adherent());
 		@SuppressWarnings("unused")
 		int nbmodif = stm.executeUpdate();
-		
+
 		// Récupération de la valeur demandée
 		int temp_num_emprunt = 0;
 		ResultSet seqInsert = stm.getGeneratedKeys();
 		if (seqInsert.next())
-		 temp_num_emprunt = seqInsert.getInt(1); // N° de la colonne du tab de String
+			temp_num_emprunt = seqInsert.getInt(1); // N° de la colonne du tab de String
 
 		stm.close();	
 		return temp_num_emprunt;
 	}
 
 	/**
-	 * Insert un emprunt a partir du numero d'un adherent,
+	 * Creer les ligne d'un emprunt a partir du numero d'emprunt,
 	 * retourne le num_emprunt de l'insert effectué.
 	 * @param 
 	 * @return int
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static int setEmprunt(Livre livre)
+	public static int setEmprunt(int num_emprunt, Exemplaire exemplaire)
 			throws ClassNotFoundException, SQLException{
 
-		String sql = "INSERT INTO emprunt (num_emprunt, num_adherent, emp_date_emp) "
-				+ "VALUES (SEQ_EMPRUNT_num_emprunt.NEXTVAL, ?, SYSDATE)";
+		String sql = "INSERT INTO LIGEMPRUNT (num_emprunt, num_exemplaire, num_etat) "
+				+ "VALUES (?, ?, ?)";
 
 		PreparedStatement stm = 
-				ConnectionManager.getConnection().prepareStatement(sql, new String[] {"num_emprunt"});
+				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setInt(1, livre.getNum_livre());
-		@SuppressWarnings("unused")
+		stm.setInt(1, num_emprunt);
+		stm.setInt(2, exemplaire.getNum_exemplaire());
+		stm.setInt(3, exemplaire.getNum_etat());
+
 		int nbmodif = stm.executeUpdate();
-		
+
 		// Récupération de la valeur demandée
-		int temp_num_emprunt = 0;
-		ResultSet seqInsert = stm.getGeneratedKeys();
-		if (seqInsert.next())
-		 temp_num_emprunt = seqInsert.getInt(1); // N° de la colonne du tab de String
 
 		stm.close();	
-		return temp_num_emprunt;
+		return nbmodif;
 	}
 }

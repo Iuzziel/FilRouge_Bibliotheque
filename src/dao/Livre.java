@@ -40,4 +40,60 @@ public class Livre {
 		v.add(String.valueOf(num_theme));
 		return v;
 	}
+
+	public int getNum_livre() {
+		return num_livre;
+	}
+
+	public void setNum_livre(int num_livre) {
+		this.num_livre = num_livre;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	public String getISBN() {
+		return ISBN;
+	}
+
+	public void setISBN(String iSBN) {
+		ISBN = iSBN;
+	}
+
+	public String getISSN() {
+		return ISSN;
+	}
+
+	public void setISSN(String iSSN) {
+		ISSN = iSSN;
+	}
+
+	public String getLivre_comment() {
+		return livre_comment;
+	}
+
+	public void setLivre_comment(String livre_comment) {
+		this.livre_comment = livre_comment;
+	}
+
+	public int getNum_auteur() {
+		return num_auteur;
+	}
+
+	public void setNum_auteur(int num_auteur) {
+		this.num_auteur = num_auteur;
+	}
+
+	public int getNum_theme() {
+		return num_theme;
+	}
+
+	public void setNum_theme(int num_theme) {
+		this.num_theme = num_theme;
+	}
 }

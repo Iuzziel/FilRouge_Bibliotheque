@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LivreManager {
+public class ExemplaireManager {
 
 	/**
 	 * Retourne un livre a partir de son numero
@@ -13,29 +13,26 @@ public class LivreManager {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static Livre getLivre(Livre livre) 
+	public static Exemplaire getExemplaire(Exemplaire exemplaire) 
 			throws ClassNotFoundException, SQLException{
 
-		Livre tmp = null;
+		Exemplaire tmp = null;
 
-		String sql = "SELECT * FROM livre WHERE num_livre = ?";
+		String sql = "SELECT * FROM exemplaire WHERE num_exemplaire = ?";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setInt(1, livre.getNum_livre());
+		stm.setInt(1, exemplaire.getNum_exemplaire());
 
 		ResultSet rs = stm.executeQuery();
 
 		if(rs.next())
 		{
-			tmp = new Livre(rs.getInt("num_livre"),
-					rs.getString("titre"),
-					rs.getString("isbn"),
-					rs.getString("issn"),
-					rs.getString("livre_comment"),
-					rs.getInt("num_auteur"),
-					rs.getInt("num_theme"));
+			tmp = new Exemplaire(rs.getInt("num_exemplaire"),
+					rs.getInt("num_livre"),
+					rs.getInt("num_biblio"),
+					rs.getInt("num_etat"));
 		}
 
 		rs.close();
