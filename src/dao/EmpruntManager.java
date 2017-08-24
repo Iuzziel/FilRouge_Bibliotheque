@@ -98,4 +98,21 @@ public class EmpruntManager {
 		stm.close();	
 		return nbmodif;
 	}
+	
+	public static int updateEmprunt(Emprunt emprunt) 
+			throws ClassNotFoundException, SQLException{
+
+		String sql = "UPDATE emprunt SET emp_date_ret = ? WHERE num_emprunt = ?";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setString(1, "SYSDATE");
+		stm.setInt(2, emprunt.num_emprunt);
+
+		int res = stm.executeUpdate();
+
+		stm.close();	
+		return res;
+	}
 }

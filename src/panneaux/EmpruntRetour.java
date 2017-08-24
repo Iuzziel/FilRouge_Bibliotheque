@@ -1,6 +1,8 @@
 package panneaux;
 
 import dao.*;
+import fenetres.FenetrePrincipale;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,9 +29,13 @@ public class EmpruntRetour extends JPanel {
 	private static final long serialVersionUID = -2734805873664823251L;
 
 	// Donnees membres
-	private JTable jTabLivreEmpruntScan;
+	private String [] empruntCols = {"NUM_EXEMPLAIRE", "TITRE", "AUTEUR", "BIBLIOTHEQUE", "DISP"};
+	private DefaultTableModel empruntListData = new DefaultTableModel(empruntCols, 0);
+	private JTable jTabLivreEmpruntScan = new JTable(empruntListData);
 	private JScrollPane srlLivreEmpruntScanne;
-	private JTable jTabLivreRetourScan;
+	private String [] retourCols = {"NUM_EXEMPLAIRE", "TITRE", "AUTEUR", "BIBLIOTHEQUE", "DISP"};
+	private DefaultTableModel retourListData = new DefaultTableModel(retourCols, 0);
+	private JTable jTabLivreRetourScan = new JTable(retourListData);
 	private JScrollPane srlLivreRetourScanne;
 	private JButton btnEmprAjouter = new JButton("Ajouter");
 	private JButton btnEmprSupprimer = new JButton("Supprimer");
@@ -62,17 +68,6 @@ public class EmpruntRetour extends JPanel {
 		// tabEmpruntRetour/panEmprunt/Centre
 		JLabel lblEmpruntTitre = new JLabel("Livre selectionne(s) : ");
 		panEmprCentre.add(lblEmpruntTitre);
-		jTabLivreEmpruntScan = new JTable();
-		jTabLivreEmpruntScan.setModel(new DefaultTableModel(
-				new Object[][] {
-					{"Titre 1", "Auteur 1", "Exemplaire 1", "Oui", "rue machin"},
-					{"Titre 2", "Auteur 2", "Exemplaire 1", "Non", "rue machin"},
-					{"Titre 3", "Auteur 3", "Exemplaire 1", "Oui", "rue truc"},
-				},
-				new String[] {
-						"Titre", "Auteur", "N\u00B0", "Disponible", "Bibliotheque"
-				}
-				));
 		srlLivreEmpruntScanne = new JScrollPane(jTabLivreEmpruntScan);
 		panEmprCentre.add(srlLivreEmpruntScanne);
 		srlLivreEmpruntScanne.setViewportBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -97,17 +92,6 @@ public class EmpruntRetour extends JPanel {
 		// tabEmpruntRetour/panRetour/Centre
 		JLabel lblRetourTitre = new JLabel("Livre selectionne(s) : ");
 		panRetCentre.add(lblRetourTitre);
-		jTabLivreRetourScan = new JTable();
-		jTabLivreRetourScan.setModel(new DefaultTableModel(
-				new Object[][] {
-					{"Titre 1", "Auteur 1", "Exemplaire 1", "Oui", "rue machin"},
-					{"Titre 2", "Auteur 2", "Exemplaire 1", "Non", "rue machin"},
-					{"Titre 3", "Auteur 3", "Exemplaire 1", "Oui", "rue machin"},
-				},
-				new String[] {
-						"Titre", "Auteur", "N\u00B0", "Disponible", "Bibliotheque"
-				}
-				));
 		srlLivreRetourScanne = new JScrollPane(jTabLivreRetourScan);
 		panRetCentre.add(srlLivreRetourScanne);
 		srlLivreRetourScanne.setViewportBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -133,6 +117,8 @@ public class EmpruntRetour extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnEmprAjouter) {
+				Exemplaire ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
+				empruntListData.addRow(ex.toEmpRetVector());
 			}
 			if(e.getSource() == btnEmprSupprimer) {
 			}

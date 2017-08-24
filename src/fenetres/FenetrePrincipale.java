@@ -26,9 +26,24 @@ public final class FenetrePrincipale extends JFrame {
 
 		//Par defaut l'application s'ouvrre sur la partie visiteur
 		partieVisiteur = new PartieVisiteur();
-		
+
 		contentPane.add(partieVisiteur, BorderLayout.CENTER);
-		System.out.println("Pkg:fenetres-Class:FenetrePrincipale\nConstructeur atteint : Fenetre client");
+	}
+
+	//Methodes
+	public static void changerPartieClient() {
+		if(FenetreConnexion.isEstConnecte()) {
+			FenetrePrincipale.contentPane.remove(FenetrePrincipale.partieVisiteur);
+			FenetrePrincipale.setPartieEmploye(new PartieEmploye());
+			FenetrePrincipale.contentPane.add(FenetrePrincipale.partieEmploye);
+			FenetrePrincipale.contentPane.validate();
+			FenetrePrincipale.contentPane.repaint();
+		}else{
+			FenetrePrincipale.contentPane.remove(FenetrePrincipale.partieEmploye);
+			FenetrePrincipale.contentPane.add(FenetrePrincipale.partieVisiteur);
+			FenetrePrincipale.contentPane.validate();
+			FenetrePrincipale.contentPane.repaint();
+		}		
 	}
 
 	//Accesseurs
@@ -48,18 +63,4 @@ public final class FenetrePrincipale extends JFrame {
 		FenetrePrincipale.partieEmploye = partieEmploye;
 	}
 
-	public static void changerPartieClient() {
-		if(FenetreConnexion.isEstConnecte()) {
-			FenetrePrincipale.contentPane.remove(FenetrePrincipale.partieVisiteur);
-			FenetrePrincipale.setPartieEmploye(new PartieEmploye());
-			FenetrePrincipale.contentPane.add(FenetrePrincipale.partieEmploye);
-			FenetrePrincipale.contentPane.validate();
-			FenetrePrincipale.contentPane.repaint();
-		}else{
-			FenetrePrincipale.contentPane.remove(FenetrePrincipale.partieEmploye);
-			FenetrePrincipale.contentPane.add(FenetrePrincipale.partieVisiteur);
-			FenetrePrincipale.contentPane.validate();
-			FenetrePrincipale.contentPane.repaint();
-		}		
-	}
 }

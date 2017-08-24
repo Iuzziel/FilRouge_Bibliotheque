@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.SQLException;
 import java.util.Vector;
 
 public class Exemplaire {
@@ -7,6 +8,7 @@ public class Exemplaire {
 	private int num_livre;
 	private int num_biblio;
 	private int num_etat;
+	private String exemp_comment;
 
 	public Exemplaire (int num_exemplaire){
 		this.num_exemplaire = num_exemplaire;
@@ -17,7 +19,7 @@ public class Exemplaire {
 		this.num_livre = num_livre;
 		this.num_biblio = num_biblio;
 		this.num_etat = num_etat;
-		
+
 	}
 
 	public String toString(){
@@ -30,6 +32,50 @@ public class Exemplaire {
 		v.add(String.valueOf(num_livre));
 		v.add(String.valueOf(num_biblio));
 		v.add(String.valueOf(num_etat));;
+		return v;
+	}
+
+	public Vector<String> toInfoVector(){
+		Livre liv;
+		Auteur aut;
+		Bibliotheque bibli;
+		Etat eta;
+		Vector<String> v = new Vector<String>();
+		try {
+			liv = LivreManager.getLivreInfo(this);
+			aut = AuteurManager.getAuteur(new Auteur(liv.getNum_auteur()));
+			bibli = BibliothequeManager.getBibliotheque(new Bibliotheque(num_biblio));
+			eta = EtatManager.getEtat(new Etat(this.num_etat));
+			v.add(String.valueOf(num_exemplaire));
+			v.add(String.valueOf(liv.getTitre()));
+			v.add(String.valueOf(aut.toString()));
+			v.add(String.valueOf(bibli.getBibliotheque()));
+			v.add(String.valueOf(eta.getEtat()));;
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:dao-Class:Exemplaire-Tag:1");
+			e.printStackTrace();
+		}
+		return v;
+	}
+	
+	public Vector<String> toEmpRetVector(){
+		Livre liv;
+		Auteur aut;
+		Bibliotheque bibli;
+		Vector<String> v = new Vector<String>();
+		try {
+			liv = LivreManager.getLivreInfo(this);
+			aut = AuteurManager.getAuteur(new Auteur(liv.getNum_auteur()));
+			bibli = BibliothequeManager.getBibliotheque(new Bibliotheque(num_biblio));
+			v.add(String.valueOf(num_exemplaire));
+			v.add(String.valueOf(liv.getTitre()));
+			v.add(String.valueOf(aut.toString()));
+			v.add(String.valueOf(bibli.getBibliotheque()));
+			v.add(String.valueOf(LigEmpruntManager.getDisp(this)));
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:dao-Class:Exemplaire-Tag:1");
+			e.printStackTrace();
+		}
 		return v;
 	}
 
@@ -64,4 +110,14 @@ public class Exemplaire {
 	public void setNum_etat(int num_etat) {
 		this.num_etat = num_etat;
 	}
+
+	public String getExemp_comment() {
+		return exemp_comment;
+	}
+
+	public void setExemp_comment(String exemp_comment) {
+		this.exemp_comment = exemp_comment;
+	}
+	
+	
 }

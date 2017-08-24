@@ -3,6 +3,8 @@ package panneaux;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import dao.*;
+import fenetres.FenetrePrincipale;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
@@ -11,6 +13,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.sql.SQLException;
+
 import javax.swing.border.EmptyBorder;
 
 public class InformationLivre extends JPanel {
@@ -40,7 +44,58 @@ public class InformationLivre extends JPanel {
 	public InformationLivre() {
 		setBorder(new TitledBorder(null, "Information sur le livre", TitledBorder.LEADING, TitledBorder.TOP));
 		setLayout(new BorderLayout(0, 0));
+		initControle();
+	}
 
+	//*********************************************Methodes*****************************************//
+	public void setCommentaireEditable(boolean bool) {
+		this.txtAreaComment.setEditable(bool);
+		return;
+	}
+
+	public void setInformationLivreClient(boolean bool) {
+		if(bool) {
+			this.panInfoNord.remove(panInfoNordExemplaire);
+			this.panInfoNord.remove(panInfoNordComboEtat);
+		}
+		return;
+	}
+	public void refreshInfoLivre(){//TODO Finir les recups
+		Livre liv;
+		try {
+			liv = LivreManager.getLivre(new Livre(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_livre()));
+			textFieldTitre.setText(liv.getTitre());
+			textFieldAuteur.setText(AuteurManager.getAuteur(new Auteur(liv.getNum_auteur())).toString());
+			textFieldTheme.setText(ThemeManager.getTheme(new Theme(liv.getNum_theme())).getTheme());
+			textFieldEmplacement.setText("EmplacementManager.getEmplacement");
+			textFieldISBN.setText(liv.getISBN());
+			textFieldISSN.setText(liv.getISSN());
+			textFieldNbExemplaireDispo.setText("LigEmpruntManager.getNbDispo");
+			textFieldNbExemplaireDispoBiblio.setText("LigEmpruntManager.getNbDispoBiblio");
+			textFieldExemplaire.setText(String.valueOf(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_exemplaire()));
+			txtAreaComment.setText(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getExemp_comment());
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:panneaux-Class:InformationLivre-Tag:1");
+			e.printStackTrace();
+		}
+	}
+
+	//TODO Changer pour le getEtat de l'exemplaire
+	/**
+	 * Definie l'etat, donc l'affichage du statut de la combo.
+	 * 0 - Excellent 
+	 * 1 - Tres bon 
+	 * 2 - Bon 
+	 * 3 - Mauvais 
+	 * 4 - Perdu
+	 * 
+	 * @param i
+	 */
+	public void setComboEtat(int i) {
+		this.cboEtat.setSelectedIndex(i);
+	}
+
+	private void initControle() {
 		///////////////////// Regroupement des Infos + TextField/////////////////////
 		panInfoNord.setBorder(new EmptyBorder(0, 2, 5, 2));
 		add(panInfoNord, BorderLayout.NORTH);
@@ -171,36 +226,18 @@ public class InformationLivre extends JPanel {
 		JButton btnQuitterLaRecherche = new JButton("Quitter la Recherche");
 		panInfoSud.add(btnQuitterLaRecherche);
 
+		//
+		textFieldTitre.setEditable(false);
+		textFieldAuteur.setEditable(false);
+		textFieldTheme.setEditable(false);
+		textFieldEmplacement.setEditable(false);
+		textFieldISBN.setEditable(false);
+		textFieldISSN.setEditable(false);
+		textFieldNbExemplaireDispo.setEditable(false);
+		textFieldNbExemplaireDispoBiblio.setEditable(false);
+		textFieldExemplaire.setEditable(false);
+		txtAreaComment.setEditable(false);
 	}
-
-	//*********************************************Methodes*****************************************//
-	public void setCommentaireEditable(boolean bool) {
-		this.txtAreaComment.setEditable(bool);
-		return;
-	}
-
-	public void setInformationLivreClient(boolean bool) {
-		if(bool) {
-			this.panInfoNord.remove(panInfoNordExemplaire);
-			this.panInfoNord.remove(panInfoNordComboEtat);
-		}
-		return;
-	}
-
-	/**
-	 * Definie l'etat, donc l'affichage du statut de la combo.
-	 * 0 - Excellent 
-	 * 1 - Tres bon 
-	 * 2 - Bon 
-	 * 3 - Mauvais 
-	 * 4 - Perdu
-	 * 
-	 * @param i
-	 */
-	public void setComboEtat(int i) {
-		this.cboEtat.setSelectedIndex(i);
-	}
-
 	//************************************************* Accesseurs***************************************//
 	public JTextField getTextFieldTitre() {
 		return textFieldTitre;

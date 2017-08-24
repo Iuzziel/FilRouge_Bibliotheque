@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import dao.*;
+import fenetres.FenetrePrincipale;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -29,7 +31,6 @@ public class RechercherUnLivre extends JPanel {
 	private static final long serialVersionUID = -3793794312904965025L;
 
 	// Donnees membre
-	// TODO Penser a changer avec getter et setter dans le code final
 	private JTextField textFieldTitre;
 	private JTextField textFieldAuteur;
 	private JTextField textFieldTheme;
@@ -134,13 +135,19 @@ public class RechercherUnLivre extends JPanel {
 
 		//Abonnement aux Listeners
 		textFieldExemplaire.addActionListener(new appActionListener());
+		textFieldExemplaire.addKeyListener(new AppKeyListener());
 	}
-	
+
 	// Listener
 	class AppKeyListener implements KeyListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			// Auto-generated method stub
+			if(e.getSource() == textFieldExemplaire){
+				textFieldTitre.setText("");
+				textFieldAuteur.setText("");
+				textFieldTheme.setText("");	
+				lblRechercheStatus.setText("");
+			}
 		}
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -172,8 +179,9 @@ public class RechercherUnLivre extends JPanel {
 			listData.setRowCount(0);
 			tempRecherExemp = ExemplaireManager.getExemplaire(new Exemplaire(Integer.valueOf(textFieldExemplaire.getText())));
 			if (tempRecherExemp != null) {
-				listData.addRow(tempRecherExemp.toVector());
-				affichageInfo();
+				listData.addRow(tempRecherExemp.toInfoVector());
+				affichageInfo(tempRecherExemp);
+				FenetrePrincipale.partieEmploye.getGestEmpruntInformationLivre().refreshInfoLivre();
 			} else {
 				lblRechercheStatus.setText("Pas d'exemplaire avec ce numero");
 				System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nPas d'exemplaire avec ce numero");
@@ -190,62 +198,72 @@ public class RechercherUnLivre extends JPanel {
 		}
 	}
 	//Remplissage de la partie info en fonction de la listData
-	private void affichageInfo() {
-		int num = tempRecherExemp.getNum_livre();
-		Livre liv = new Livre(num);
-		textFieldTitre.setText(liv.getTitre());
-		Auteur aut = new Auteur(liv.getNum_auteur());
-		textFieldAuteur.setText(aut.toString());
-		Theme thm = new Theme(liv.getNum_theme());
-		textFieldTheme.setText(thm.getTheme());
-		System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nMethode affichageInfo()");
+	private void affichageInfo(Exemplaire temp) {
+		Livre liv;
+		Auteur aut;
+		Theme thm;
+		try {
+			liv = LivreManager.getLivreInfo(temp);
+			textFieldTitre.setText(liv.getTitre());
+			aut = AuteurManager.getAuteur(new Auteur(liv.getNum_auteur()));
+			textFieldAuteur.setText(aut.toString());
+			thm = ThemeManager.getTheme(new Theme(liv.getNum_theme()));
+			textFieldTheme.setText(thm.getTheme());
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nMethode affichageInfo()");
+			e.printStackTrace();
+		}
 	}
 	// **********************************Accesseurs**********************************//
 	public JTextField getTextFieldTitre() {
 		return textFieldTitre;
 	}
-	
+
 	public void setTextFieldTitre(JTextField textFieldTitre) {
 		this.textFieldTitre = textFieldTitre;
 	}
-	
+
 	public JTextField getTextFieldAuteur() {
 		return textFieldAuteur;
 	}
-	
+
 	public void setTextFieldAuteur(JTextField textFieldAuteur) {
 		this.textFieldAuteur = textFieldAuteur;
 	}
-	
+
 	public JTextField getTextFieldTheme() {
 		return textFieldTheme;
 	}
-	
+
 	public void setTextFieldTheme(JTextField textFieldTheme) {
 		this.textFieldTheme = textFieldTheme;
 	}
-	
+
 	public JTextField getTextFieldExemplaire() {
 		return textFieldExemplaire;
 	}
-	
+
 	public void setTextFieldExemplaire(JTextField textFieldExemplaire) {
 		this.textFieldExemplaire = textFieldExemplaire;
 	}
-	
+
 	public JTable getTabRenvoiResultatsLivre() {
 		return tabRenvoiResultatsLivre;
 	}
-	
+
 	public void setTabRenvoiResultatsLivre(JTable tabRenvoiResultatsLivre) {
 		this.tabRenvoiResultatsLivre = tabRenvoiResultatsLivre;
 	}
-	
+
 	public JPanel getPanRechercheBoutton() {
 		return panRechercheBoutton;
 	}
-	
+
 	public void setPanRechercheBoutton(JPanel panRechercheBoutton) {
 		this.panRechercheBoutton = panRechercheBoutton;
+	}
+	
+	public Exemplaire getTempRecherExemp() {
+		return tempRecherExemp;
 	}
 }
