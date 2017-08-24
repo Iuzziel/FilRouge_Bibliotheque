@@ -8,7 +8,6 @@ public class Exemplaire {
 	private int num_livre;
 	private int num_biblio;
 	private int num_etat;
-	private String exemp_comment;
 
 	public Exemplaire (int num_exemplaire){
 		this.num_exemplaire = num_exemplaire;
@@ -79,6 +78,26 @@ public class Exemplaire {
 		return v;
 	}
 
+	public Vector<String> toAdherEmpVector(){
+		Livre liv;
+		Auteur aut;
+		Vector<String> v = new Vector<String>();
+		try {
+			liv = LivreManager.getLivreInfo(this);
+			aut = AuteurManager.getAuteur(new Auteur(liv.getNum_auteur()));
+			v.add(String.valueOf(num_exemplaire));
+			v.add(liv.getTitre());
+			v.add(aut.toString());
+			v.add("date emprunt");
+			v.add("date retour prevu");
+			v.add("amande");
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:dao-Class:Exemplaire-Tag:1");
+			e.printStackTrace();
+		}
+		return v;
+	}
+	
 	public int getNum_exemplaire() {
 		return num_exemplaire;
 	}
@@ -111,13 +130,4 @@ public class Exemplaire {
 		this.num_etat = num_etat;
 	}
 
-	public String getExemp_comment() {
-		return exemp_comment;
-	}
-
-	public void setExemp_comment(String exemp_comment) {
-		this.exemp_comment = exemp_comment;
-	}
-	
-	
 }

@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import dao.*;
+import fenetres.FenetreConnexion;
 import fenetres.FenetrePrincipale;
 
 import javax.swing.JLabel;
@@ -180,8 +181,12 @@ public class RechercherUnLivre extends JPanel {
 			tempRecherExemp = ExemplaireManager.getExemplaire(new Exemplaire(Integer.valueOf(textFieldExemplaire.getText())));
 			if (tempRecherExemp != null) {
 				listData.addRow(tempRecherExemp.toInfoVector());
-				affichageInfo(tempRecherExemp);
-				FenetrePrincipale.partieEmploye.getGestEmpruntInformationLivre().refreshInfoLivre();
+				if(FenetreConnexion.isEstConnecte()){
+					affichageInfo(tempRecherExemp);
+					FenetrePrincipale.partieEmploye.getGestEmpruntInformationLivre().refreshInfoLivre();
+				}else{
+					FenetrePrincipale.partieVisiteur.getModuleInformationLivre().refreshInfoLivre();
+				}
 			} else {
 				lblRechercheStatus.setText("Pas d'exemplaire avec ce numero");
 				System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nPas d'exemplaire avec ce numero");

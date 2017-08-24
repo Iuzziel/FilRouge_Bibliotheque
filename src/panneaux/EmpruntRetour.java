@@ -2,12 +2,11 @@ package panneaux;
 
 import dao.*;
 import fenetres.FenetrePrincipale;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-
+import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -43,6 +42,9 @@ public class EmpruntRetour extends JPanel {
 	private JButton btnRetAjouter = new JButton("Ajouter");
 	private JButton btnRetSupprimer = new JButton("Supprimer");
 	private JButton btnValiderRetour = new JButton("Valider Retour");
+	private Vector<Exemplaire> vectExemplaire = new Vector<Exemplaire>();
+	private int nbEmpruntMax = 0;
+	private int nbEmpruntMaxAdherent = 0;
 
 	// Constructeur
 	public EmpruntRetour() {
@@ -50,7 +52,77 @@ public class EmpruntRetour extends JPanel {
 		setPreferredSize(new Dimension(375, 250));
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Selection Emprunt/Retour", TitledBorder.LEADING, TitledBorder.TOP));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		initControle();
+	}
 
+	//Actions listeners
+	private class appActionListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == btnEmprAjouter) {
+				nbEmpruntMaxAdherent = getNbEmpruntMaxAdherent();
+				if(vectExemplaire.size() < nbEmpruntMaxAdherent){
+					btnEmprAjouter_Click();
+				}
+			}else{
+				System.out.println("Pkg:panneaux-Class:EmpruntRetour\nNb max d'emprunt atteint");
+			}
+			if(e.getSource() == btnEmprSupprimer) {
+			}
+			if(e.getSource() == btnEmpruntEnregistrerFinal) {
+				try {
+					int tmpNumEmp = EmpruntManager.creerEmprunt(new Adherent(FenetrePrincipale.partieEmploye.getRechercherUnAdherent().getTempAdher().getNum_adherent()));
+					for (Exemplaire ex : vectExemplaire) {
+						EmpruntManager.setEmprunt(tmpNumEmp, ex);
+					}
+				} catch (ClassNotFoundException | SQLException e1) {
+					System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:2");
+					e1.printStackTrace();
+				}
+			}
+			if(e.getSource() == btnRetAjouter) {
+			}
+			if(e.getSource() == btnRetSupprimer) {
+			}
+			if(e.getSource() == btnValiderRetour) {
+			}
+		}
+	}
+
+	//Methodes
+	private int getNbEmpruntMaxAdherent(){
+		int tmp = 0;
+		try {
+			tmp = nbEmpruntMax - EmpruntManager.getNbEmpruntAdhe(FenetrePrincipale.partieEmploye.getRechercherUnAdherent().getTempAdher().getNum_adherent());
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:6");
+			e.printStackTrace();
+		}
+		return tmp;
+	}
+	//Ajoute l'exemplaire selectionné au vecteur temporaire d'emprunt
+	private void btnEmprAjouter_Click() {
+		boolean nouveau = true;
+		Exemplaire ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
+		for (Exemplaire exTemp : vectExemplaire) {
+			if(exTemp.equals(ex)) nouveau = false;
+		}
+		if (nouveau) {
+			vectExemplaire.addElement(ex);
+			empruntListData.addRow(ex.toEmpRetVector());
+		}else{
+			System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:1");
+		}
+	}
+
+	//Initialisation du panel
+	private void initControle() {
+		try {
+			nbEmpruntMax = ParametreManager.getParametre(new Parametre("empruntmax")).getValeur();
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:panneaux-Class:EmpruntRetour\nEchec chargement du parametre nb emprunt max");
+			e.printStackTrace();
+		}
 		// tabEmpruntRetour
 		JTabbedPane tabEmpruntRetour = new JTabbedPane(JTabbedPane.TOP);
 		add(tabEmpruntRetour);
@@ -110,40 +182,5 @@ public class EmpruntRetour extends JPanel {
 		btnRetAjouter.addActionListener(new appActionListener());
 		btnRetSupprimer.addActionListener(new appActionListener());
 		btnValiderRetour.addActionListener(new appActionListener());
-	}
-
-	//Actions listeners
-	private class appActionListener implements ActionListener{
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnEmprAjouter) {
-				Exemplaire ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
-				empruntListData.addRow(ex.toEmpRetVector());
-			}
-			if(e.getSource() == btnEmprSupprimer) {
-			}
-			if(e.getSource() == btnEmpruntEnregistrerFinal) {//TODO Temporairement un bouton test
-				try {
-					int temp = EmpruntManager.creerEmprunt(new Adherent(1));
-					System.out.println("Pkg:panneaux-Class:EmpruntRetour\nValeur de la seq : " + temp);
-				} catch (ClassNotFoundException | SQLException e1) {
-					System.out.println("Pkg:panneaux-Class:EmpruntRetour");
-					e1.printStackTrace();
-				}
-			}
-			if(e.getSource() == btnRetAjouter) {
-			}
-			if(e.getSource() == btnRetSupprimer) {
-			}
-			if(e.getSource() == btnValiderRetour) {
-			}
-		}
-	}
-
-	// Methodes
-	public void remplirListeLivreScan(String codeExemplaire) {
-		// TODO Transformer le codeExemplaire en une requete pour aller chercher le livre correspondant et ajouter ca au tableau
-		this.repaint();
-		return;
 	}
 }

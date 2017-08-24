@@ -14,6 +14,8 @@ public class PartieVisiteur extends JPanel{
 
 	//Donnees membre
 	private Header moduleHeader;
+	private InformationLivre moduleInformationLivre = new InformationLivre();
+	private RechercherUnLivre moduleRechercheLivre = new RechercherUnLivre();
 
 	//Constructeur
 	public PartieVisiteur() {
@@ -23,29 +25,27 @@ public class PartieVisiteur extends JPanel{
 		this.setVisible(true);
 
 		// Creation des modules composants ce Panel
-		RechercherUnLivre moduleRechercheLivre = new RechercherUnLivre();
 		moduleRechercheLivre.setMaximumSize(new Dimension(500, 2147483647));
 		moduleRechercheLivre.setPreferredSize(new Dimension(250, 200));
 		moduleRechercheLivre.setMinimumSize(new Dimension(150, 200));
-		InformationLivre moduleInformationLivre = new InformationLivre();
 		moduleInformationLivre.setInformationLivreClient(true);
 		moduleInformationLivre.repaint();
 		moduleHeader = new Header("Espace visiteurs");
 		this.add(moduleHeader, BorderLayout.NORTH);
 		this.add(moduleRechercheLivre, BorderLayout.WEST);
 		this.add(moduleInformationLivre, BorderLayout.CENTER);
-
-		/*
-		 * TODO Mettre non editable avec les getter depuis le moduleRechercheLivre
-		 * JTextField textFieldTitre; JTextField textFieldAuteur; JTextField
-		 * textFieldTheme; JTextField textFieldEmplacement; JTextField textFieldISBN;
-		 * JTextField textFieldISSN; JTextField textFieldNbExemplaireDispo; JTextField
-		 * textFieldNbExemplaireDispoBiblio; JTextArea txtAreaComment;
-		 */
 	}
 
 	public Header getModuleHeader() {
 		return moduleHeader;
+	}
+
+	public InformationLivre getModuleInformationLivre() {
+		return moduleInformationLivre;
+	}
+
+	public RechercherUnLivre getModuleRechercheLivre() {
+		return moduleRechercheLivre;
 	}
 
 }

@@ -19,6 +19,7 @@ public class PartieEmploye extends JPanel {
 	
 	private RechercherUnLivre rechercherUnLivre;
 	private InformationLivre gestEmpruntInformationLivre;
+	private RechercherUnAdherent rechercherUnAdherent;
 
 	// Constructeur de la fenetre
 	public PartieEmploye() {
@@ -68,7 +69,7 @@ public class PartieEmploye extends JPanel {
 		tabGestEmprunt.add(panTabGestEmpruntHaut);
 		panTabGestEmpruntHaut.setLayout(new BoxLayout(panTabGestEmpruntHaut, BoxLayout.X_AXIS));
 		// Panel du haut Ajout du module recherche adherent
-		RechercherUnAdherent rechercherUnAdherent = new RechercherUnAdherent();
+		rechercherUnAdherent = new RechercherUnAdherent();
 		panTabGestEmpruntHaut.add(rechercherUnAdherent);
 		// Panel du haut Ajout du module Emprunt/Retour
 		EmpruntRetour empruntRetour = new EmpruntRetour();
@@ -113,6 +114,9 @@ public class PartieEmploye extends JPanel {
 	//Accesseurs
 	public RechercherUnLivre getRechercherUnLivre() {
 		return rechercherUnLivre;
+	}
+	public RechercherUnAdherent getRechercherUnAdherent() {
+		return rechercherUnAdherent;
 	}
 	public InformationLivre getGestEmpruntInformationLivre() {
 		return gestEmpruntInformationLivre;

@@ -3,6 +3,7 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class EmpruntManager {
 
@@ -32,6 +33,74 @@ public class EmpruntManager {
 			tmp = new Emprunt(rs.getInt("num_emprunt"),
 					rs.getInt("num_adherent"),
 					rs.getDate("emp_date_emp"));
+		}
+
+		rs.close();
+		stm.close();	
+		return tmp;
+	}
+
+	/**
+	 * Retourne un le nombre de livre emprunte par un adherent 
+	 * a partir du numero d'adherent.
+	 * @param 
+	 * @return int
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static int getNbEmpruntAdhe(int num_adherent) 
+			throws ClassNotFoundException, SQLException{
+
+		String sql = "SELECT COUNT(num_exemplaire) FROM ligemprunt "
+				+ "JOIN emprunt ON ligemprunt.num_emprunt = emprunt.num_emprunt "
+				+ "WHERE emprunt.num_adherent = ? AND emprunt.emp_date_ret IS NULL";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setInt(1, num_adherent);
+
+		ResultSet rs = stm.executeQuery();
+
+		int tmp = 0;
+
+		if(rs.next())
+		{
+			tmp = rs.getInt("COUNT(num_exemplaire)");
+		}
+
+		rs.close();
+		stm.close();	
+		return tmp;
+	}
+	
+	/**
+	 * Retourne un le vector des num_exemplaire emprunte par un adherent 
+	 * a partir du numero d'adherent.
+	 * @param 
+	 * @return int
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static Vector<Integer> getEmpruntAdhe(int num_adherent) 
+			throws ClassNotFoundException, SQLException{
+
+		String sql = "SELECT num_exemplaire FROM ligemprunt "
+				+ "JOIN emprunt ON ligemprunt.num_emprunt = emprunt.num_emprunt "
+				+ "WHERE emprunt.num_adherent = ?";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setInt(1, num_adherent);
+
+		ResultSet rs = stm.executeQuery();
+
+		Vector<Integer> tmp = new Vector<Integer>();
+
+		if(rs.next())
+		{
+			tmp.add(rs.getInt("num_exemplaire"));
 		}
 
 		rs.close();
@@ -98,7 +167,7 @@ public class EmpruntManager {
 		stm.close();	
 		return nbmodif;
 	}
-	
+
 	public static int updateEmprunt(Emprunt emprunt) 
 			throws ClassNotFoundException, SQLException{
 

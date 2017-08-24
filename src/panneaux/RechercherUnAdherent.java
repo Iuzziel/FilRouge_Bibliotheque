@@ -11,6 +11,9 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 import dao.Adherent;
 import dao.AdherentManager;
+import dao.EmpruntManager;
+import dao.Exemplaire;
+import dao.ExemplaireManager;
 import fenetres.CreerUnAdherent;
 
 public class RechercherUnAdherent extends JPanel {
@@ -30,16 +33,19 @@ public class RechercherUnAdherent extends JPanel {
 	private JTextField txtFieldInfoAdresse;
 	private JTextField txtFieldInfoDateCoti;
 	private JTextField txtFieldInfoCotiOk;
-	private String [] cols = {"NUM_ADHERENT", "ADHERNOM", "ADHERPRENOM", "ADHERADRESSE", "ADHERDATENAISS", "ADHERDATECOTI"};
-	private DefaultTableModel listData = new DefaultTableModel(cols, 0);
-	private JTable tabRenvoiResultatsAdherent = new JTable(listData);
-	private JTable tabAdherentLivreEmprunte;
+	private String [] colResultRechAdh = {"NUM_ADHERENT", "ADHERNOM", "ADHERPRENOM", "ADHERADRESSE", "ADHERDATENAISS", "ADHERDATECOTI"};
+	private DefaultTableModel lisDatResultRechAdh = new DefaultTableModel(colResultRechAdh, 0);
+	private JTable tabRenvoiResultatsAdherent = new JTable(lisDatResultRechAdh);
+	private String [] colAdhLivEmp = {"NUM_EXEMP", "TITRE", "AUTEUR", "DATE_EMP", "RET_PREV", "AMANDE"};
+	private DefaultTableModel lisDatAdhLivEmp = new DefaultTableModel(colAdhLivEmp, 0);
+	private JTable tabAdherentLivreEmprunte = new JTable(lisDatAdhLivEmp);
 	private JTextField txtFieldPenaliteEnCours;
 	private JButton btnCreerAdherent = new JButton("Cr\u00E9er Adh\u00E9rent");
 	private JButton btnEditerCetAdhrent = new JButton("Editer cet Adh\u00E9rent ?");
 	private JButton btnAnnulerEdition = new JButton("Annuler");
 	private JPanel panInfoAdherentPersoBtn = new JPanel();
 	private JLabel lblRechercheStatus = new JLabel("");
+	private Adherent tempAdher;
 
 	// Constructeur
 	public RechercherUnAdherent() {
@@ -48,6 +54,97 @@ public class RechercherUnAdherent extends JPanel {
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
+		initControle();
+	}
+
+	// Listener
+	class AppKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			lblRechercheStatus.setText("");
+			// Auto-generated method stub
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// Auto-generated method stub
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// Auto-generated method stub
+		}
+	}
+
+	public class appActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == btnCreerAdherent) {
+				CreerUnAdherent fenetreCreerAdherent = new CreerUnAdherent();
+				fenetreCreerAdherent.setLocationRelativeTo(null);
+				fenetreCreerAdherent.setVisible(true);
+				fenetreCreerAdherent.setAlwaysOnTop(true);;
+				panInfoAdherentPersoBtn.repaint();
+			}
+			if(e.getSource() == btnEditerCetAdhrent) {
+				panInfoAdherentPersoBtn.removeAll();
+				panInfoAdherentPersoBtn.add(new JButton("Valider"));
+				panInfoAdherentPersoBtn.add(btnAnnulerEdition);
+				panInfoAdherentPersoBtn.validate();
+				panInfoAdherentPersoBtn.repaint();
+			}
+			if(e.getSource() == btnAnnulerEdition) {
+				panInfoAdherentPersoBtn.removeAll();
+				panInfoAdherentPersoBtn.add(btnEditerCetAdhrent);
+				panInfoAdherentPersoBtn.repaint();
+			}
+			if(e.getSource() == textFieldNumeroAdherent) {
+				textFieldNumeroAdherent_click();
+			}
+		}
+	}
+
+	//Méthodes
+	//Recherche par numero adherent
+	private void textFieldNumeroAdherent_click(){
+		try {
+			lisDatResultRechAdh.setRowCount(0);
+			lisDatAdhLivEmp.setRowCount(0);
+			tempAdher = AdherentManager.getAdherent(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
+			if (tempAdher != null) {
+				lisDatResultRechAdh.addRow(tempAdher.toVector());
+				for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {
+					lisDatAdhLivEmp.addRow(ExemplaireManager.getExemplaire(new Exemplaire(temp)).toAdherEmpVector());
+				}
+				affichageInfo();
+			} else {
+				lblRechercheStatus.setText("Pas d'adherent avec ce numero");
+				System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nPas d'adherent avec ce numero");
+			}
+		} catch (ClassNotFoundException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:1");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:2");
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			lblRechercheStatus.setText("Ce n'est pas un numero adherent valide");
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nCe n'est pas un numero adherent valide");
+		}
+	}
+
+	//Remplissage de la partie info en fonction de la listData
+	private void affichageInfo() {
+		txtFieldInfoNom.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 1)));
+		txtFieldInfoPrenom.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 2)));
+		txtFieldInfoAdresse.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 3)));
+		txtFieldInfoDateCoti.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 5)));
+		//TODO Faire les controle cotisation ok
+		txtFieldInfoCotiOk.setText("A jour");
+		txtFieldInfoCotiOk.setBackground(Color.GREEN);
+	}
+
+	private void initControle() {
 		JPanel panRechercheResultats = new JPanel();
 		add(panRechercheResultats);
 		panRechercheResultats.setLayout(new BorderLayout(5, 5));
@@ -130,7 +227,7 @@ public class RechercherUnAdherent extends JPanel {
 		panRechercheStatus.add(lblRechercheStatus);
 
 		//*************************************Panel des infos adherent renvoye apres la recherche**********************************//
-		// Renvoie de tout les label TODO Ajouter les textfields lies aux infos
+		// Renvoie de tout les label
 		JPanel panInfoAdherent = new JPanel();
 		panInfoAdherent.setMinimumSize(new Dimension(150, 100));
 		panInfoAdherent.setBorder(new TitledBorder(null, "Information sur l'adh\u00E9rent", TitledBorder.LEADING,
@@ -226,19 +323,8 @@ public class RechercherUnAdherent extends JPanel {
 		JPanel panInfoEmpruntAdherent = new JPanel();
 		panInfoAdherent.add(panInfoEmpruntAdherent, BorderLayout.CENTER);
 		panInfoEmpruntAdherent.setLayout(new BorderLayout(5, 5));
-		JLabel lblLivresEmprunts = new JLabel("Livre(s) emprunt\u00E9(s) : ");
+		JLabel lblLivresEmprunts = new JLabel("Livre(s) emprunte(s) : ");
 		panInfoEmpruntAdherent.add(lblLivresEmprunts, BorderLayout.NORTH);
-		tabAdherentLivreEmprunte = new JTable();
-		tabAdherentLivreEmprunte.setModel(new DefaultTableModel(
-				new Object[][] {
-					{null, null, null, null, null, null},
-					{null, null, null, null, null, null},
-					{null, null, null, null, null, null},
-				},
-				new String[] {
-						"N\u00B0", "Titre", "Auteur", "Date emprunt", "Retour prevu", "Retour"
-				}
-				));
 		tabAdherentLivreEmprunte.setPreferredSize(new Dimension(50, 50));
 		JScrollPane srlTabAdherentLivreEmprunte = new JScrollPane(tabAdherentLivreEmprunte);
 		panInfoEmpruntAdherent.add(srlTabAdherentLivreEmprunte, BorderLayout.CENTER);
@@ -248,90 +334,7 @@ public class RechercherUnAdherent extends JPanel {
 		btnEditerCetAdhrent.addActionListener(new appActionListener());
 		btnAnnulerEdition.addActionListener(new appActionListener());
 		textFieldNumeroAdherent.addKeyListener(new AppKeyListener());
-		textFieldNumeroAdherent.addActionListener(new appActionListener());
-	}
-
-	// Listener
-	class AppKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			lblRechercheStatus.setText("");
-			// Auto-generated method stub
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// Auto-generated method stub
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// Auto-generated method stub
-		}
-	}
-
-	public class appActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnCreerAdherent) {
-				CreerUnAdherent fenetreCreerAdherent = new CreerUnAdherent();
-				fenetreCreerAdherent.setLocationRelativeTo(null);
-				fenetreCreerAdherent.setVisible(true);
-				fenetreCreerAdherent.setAlwaysOnTop(true);;
-				panInfoAdherentPersoBtn.repaint();
-			}
-			if(e.getSource() == btnEditerCetAdhrent) {
-				panInfoAdherentPersoBtn.removeAll();
-				panInfoAdherentPersoBtn.add(new JButton("Valider"));
-				panInfoAdherentPersoBtn.add(btnAnnulerEdition);
-				panInfoAdherentPersoBtn.validate();
-				panInfoAdherentPersoBtn.repaint();
-			}
-			if(e.getSource() == btnAnnulerEdition) {
-				panInfoAdherentPersoBtn.removeAll();
-				panInfoAdherentPersoBtn.add(btnEditerCetAdhrent);
-				panInfoAdherentPersoBtn.repaint();
-			}
-			if(e.getSource() == textFieldNumeroAdherent) {
-				textFieldNumeroAdherent_click();
-			}
-		}
-	}
-
-	//Méthodes
-	//Recherche par numero adherent
-	private void textFieldNumeroAdherent_click(){
-		try {
-			listData.setRowCount(0);
-			Adherent tempAdher = AdherentManager.getAdherent(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
-			if (tempAdher != null) {
-				listData.addRow(tempAdher.toVector());
-				affichageInfo();
-			} else {
-				lblRechercheStatus.setText("Pas d'adherent avec ce numero");
-				System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nPas d'adherent avec ce numero");
-			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:1");
-			e.printStackTrace();
-		} catch (SQLException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:2");
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			lblRechercheStatus.setText("Ce n'est pas un numero adherent valide");
-			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nCe n'est pas un numero adherent valide");
-		}
-	}
-	
-	//Remplissage de la partie info en fonction de la listData
-	private void affichageInfo() {
-		txtFieldInfoNom.setText(String.valueOf(listData.getValueAt(0, 1)));
-		txtFieldInfoPrenom.setText(String.valueOf(listData.getValueAt(0, 2)));
-		txtFieldInfoAdresse.setText(String.valueOf(listData.getValueAt(0, 3)));
-		txtFieldInfoDateCoti.setText(String.valueOf(listData.getValueAt(0, 5)));
-		//TODO Faire les controle cotisation ok
-		txtFieldInfoCotiOk.setText("A jour");
-		txtFieldInfoCotiOk.setBackground(Color.GREEN);
+		textFieldNumeroAdherent.addActionListener(new appActionListener());		
 	}
 
 	// Accesseurs
@@ -413,6 +416,10 @@ public class RechercherUnAdherent extends JPanel {
 
 	public void setTabAdherentLivreEmprunte(JTable tabAdherentLivreEmprunte) {
 		this.tabAdherentLivreEmprunte = tabAdherentLivreEmprunte;
+	}
+
+	public Adherent getTempAdher() {
+		return tempAdher;
 	}
 
 }

@@ -2,8 +2,10 @@ package fenetres;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import dao.Parametre;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Vector;
 
 public final class FenetrePrincipale extends JFrame {
 	/**
@@ -15,6 +17,7 @@ public final class FenetrePrincipale extends JFrame {
 	public static PartieVisiteur partieVisiteur;
 	public static PartieEmploye partieEmploye;
 	public static JPanel contentPane;
+	public static Vector<Parametre> vectParametre = new Vector<Parametre>();
 
 	// Constructeur de la fenetre
 	public FenetrePrincipale() {
@@ -45,7 +48,7 @@ public final class FenetrePrincipale extends JFrame {
 			FenetrePrincipale.contentPane.repaint();
 		}		
 	}
-
+	
 	//Accesseurs
 	public static PartieVisiteur getPartieVisiteur() {
 		return partieVisiteur;

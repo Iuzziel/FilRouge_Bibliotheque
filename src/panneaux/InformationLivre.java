@@ -2,8 +2,10 @@ package panneaux;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 import dao.*;
+import fenetres.FenetreConnexion;
 import fenetres.FenetrePrincipale;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -63,7 +65,13 @@ public class InformationLivre extends JPanel {
 	public void refreshInfoLivre(){//TODO Finir les recups
 		Livre liv;
 		try {
-			liv = LivreManager.getLivre(new Livre(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_livre()));
+			if(FenetreConnexion.isEstConnecte()){
+				liv = LivreManager.getLivre(new Livre(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_livre()));
+				textFieldExemplaire.setText(String.valueOf(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_exemplaire()));
+			}else{
+				liv = LivreManager.getLivre(new Livre(FenetrePrincipale.partieVisiteur.getModuleRechercheLivre().getTempRecherExemp().getNum_livre()));
+				textFieldExemplaire.setText(String.valueOf(FenetrePrincipale.partieVisiteur.getModuleRechercheLivre().getTempRecherExemp().getNum_exemplaire()));
+			}
 			textFieldTitre.setText(liv.getTitre());
 			textFieldAuteur.setText(AuteurManager.getAuteur(new Auteur(liv.getNum_auteur())).toString());
 			textFieldTheme.setText(ThemeManager.getTheme(new Theme(liv.getNum_theme())).getTheme());
@@ -72,8 +80,7 @@ public class InformationLivre extends JPanel {
 			textFieldISSN.setText(liv.getISSN());
 			textFieldNbExemplaireDispo.setText("LigEmpruntManager.getNbDispo");
 			textFieldNbExemplaireDispoBiblio.setText("LigEmpruntManager.getNbDispoBiblio");
-			textFieldExemplaire.setText(String.valueOf(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_exemplaire()));
-			txtAreaComment.setText(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getExemp_comment());
+			txtAreaComment.setText(liv.getLivre_comment());
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("Pkg:panneaux-Class:InformationLivre-Tag:1");
 			e.printStackTrace();
@@ -214,10 +221,13 @@ public class InformationLivre extends JPanel {
 		txtAreaComment = new JTextArea();
 		txtAreaComment.setPreferredSize(new Dimension(150, 150));
 		txtAreaComment.setMinimumSize(new Dimension(150, 150));
+		txtAreaComment.setColumns(70);
 		txtAreaComment.setEditable(false);
 		txtAreaComment.setLineWrap(true);
 		txtAreaComment.setWrapStyleWord(true);
-		panInfoCentre.add(txtAreaComment);
+		JScrollPane scrlAreaComment = new JScrollPane(txtAreaComment);
+		scrlAreaComment.setAutoscrolls(true);
+		panInfoCentre.add(scrlAreaComment);
 
 		///////////////////// Zone Sud, bouton quitter/////////////////////
 		JPanel panInfoSud = new JPanel();

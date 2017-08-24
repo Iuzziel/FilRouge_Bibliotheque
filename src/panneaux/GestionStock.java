@@ -100,7 +100,7 @@ public class GestionStock extends JPanel {
 		// TODO Remplir les comboBox en fonction des conditions
 		JPanel panGestListeTri = new JPanel();
 		panGestionListe.add(panGestListeTri);
-		JLabel lblConditionUtilisePour = new JLabel("Condition utilis\u00E9e pour le tri  : ");
+		JLabel lblConditionUtilisePour = new JLabel("Condition utilisee pour le tri  : ");
 		panGestListeTri.add(lblConditionUtilisePour);
 		JComboBox<String> cboConditionUtilisePour = new JComboBox<String>();
 		panGestListeTri.add(cboConditionUtilisePour);

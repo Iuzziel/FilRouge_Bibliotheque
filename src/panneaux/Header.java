@@ -36,7 +36,7 @@ public class Header extends JPanel {
 	 * 
 	 * @param titre
 	 */
-	public Header(String titre) {// TODO Rendre la creation de la fenetre conditionne par l'etat de la session
+	public Header(String titre) {
 		setLayout(new BorderLayout(5, 5));
 		JPanel panHeaderTitre = new JPanel();
 		add(panHeaderTitre, BorderLayout.CENTER);
