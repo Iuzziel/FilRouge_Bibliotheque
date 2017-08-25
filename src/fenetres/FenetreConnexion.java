@@ -38,8 +38,41 @@ public class FenetreConnexion extends JFrame {
 		setMaximumSize(new Dimension(400, 400));
 		getContentPane().setLayout(new BorderLayout(5, 5));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setVisible(true);
+		initControle();
+		
+	}
 
+	//Actions listeners
+	private class appActionListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == pwdFieldConnexion) {
+				connexion(getTextFieldConnexionIdentifiant().getText(), String.valueOf(getPwdFieldConnexion().getPassword()));
+			}
+			if(e.getSource() == btnConnexionValider) {
+				connexion(getTextFieldConnexionIdentifiant().getText(), String.valueOf(getPwdFieldConnexion().getPassword()));
+			}
+			if(e.getSource() == btnConnexionAnnuler) {
+				dispose();
+			}
+		}
+
+	}
+	
+	//Methodes
+	private void connexion(String login, String password) {//TODO Acceder a la Bdd pour traiter la connexion
+		if(login.equals("root") && password.equals("toor")) {
+			this.setVisible(false);
+			setEstConnecte(true);
+			FenetrePrincipale.changerPartieClient();
+		}else{
+			setEstConnecte(false);
+			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
+		}
+		return;
+	}
+	
+	private void initControle() {
 		// Titre
 		JLabel lblConnexionAuxComptes = new JLabel("Connexion aux comptes Employ\u00E9s :");
 		lblConnexionAuxComptes.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -81,37 +114,14 @@ public class FenetreConnexion extends JFrame {
 		JPanel panConnexionBtn = new JPanel();
 		panConnexionIdPass.add(panConnexionBtn);
 		panConnexionBtn.add(btnConnexionValider);
-		btnConnexionValider.addActionListener(new appActionListener());
 		panConnexionBtn.add(btnConnexionAnnuler);
-		btnConnexionAnnuler.addActionListener(new appActionListener());
-
-	}
-
-	//Methodes
-	private void connexion(String login, String password) {
-		if(login.equals("root") && password.equals("toor")) {
-			this.setVisible(false);
-			setEstConnecte(true);
-			FenetrePrincipale.changerPartieClient();
-		}else{
-			setEstConnecte(false);
-			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
-		}
-		return;
-	}
-
-	//Actions listeners
-	private class appActionListener implements ActionListener{
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnConnexionValider) {
-				connexion(getTextFieldConnexionIdentifiant().getText(), String.valueOf(getPwdFieldConnexion().getPassword()));
-			}
-			if(e.getSource() == btnConnexionAnnuler) {
-				dispose();
-			}
-		}
-
+		
+		//Abonnement aux listeners
+		btnConnexionValider.addActionListener(new appActionListener());
+		btnConnexionAnnuler.addActionListener(new appActionListener());	
+		pwdFieldConnexion.addActionListener(new appActionListener());	
+		
+		this.setVisible(true);
 	}
 
 	// Accesseurs
