@@ -48,7 +48,96 @@ public class RechercherUnLivre extends JPanel {
 	public RechercherUnLivre() {
 		setBorder(new TitledBorder(null, "Rechercher un ouvrage", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
+		initControle();
+	}
 
+	// Listener
+	class AppKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if(e.getSource() == textFieldExemplaire){
+				textFieldTitre.setText("");
+				textFieldAuteur.setText("");
+				textFieldTheme.setText("");	
+				lblRechercheStatus.setText("");
+			}
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// Auto-generated method stub
+		}
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// Auto-generated method stub
+		}
+	}
+
+	public class appActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == textFieldExemplaire){
+				textFieldExemplaire_click();
+			}
+		}
+	}
+
+	// **********************************Methodes**********************************//
+	public void addBoutonCreerLivre() {
+		JButton ajouterLivre = new JButton("Ajouter un livre ");
+		panRechercheBoutton.add(ajouterLivre);
+	}
+	//Recherche par numero d'exemplaire
+	public void textFieldExemplaire_click() {
+		try {
+			listData.setRowCount(0);
+			tempRecherExemp = ExemplaireManager.getExemplaire(new Exemplaire(Integer.valueOf(textFieldExemplaire.getText())));
+			if (tempRecherExemp != null) {
+				listData.addRow(tempRecherExemp.toInfoVector());
+				if(FenetreConnexion.isEstConnecte()){
+					affichageInfo(tempRecherExemp);
+					FenetrePrincipale.partieEmploye.getGestEmpruntInformationLivre().refreshInfoLivre();
+				}else{
+					FenetrePrincipale.partieVisiteur.getModuleInformationLivre().refreshInfoLivre();
+				}
+			} else {
+				lblRechercheStatus.setText("Pas d'exemplaire avec ce numero");
+				System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nPas d'exemplaire avec ce numero");
+			}
+		} catch (ClassNotFoundException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-Tag:1");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-Tag:2");
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			lblRechercheStatus.setText("Ce n'est pas un numero d'exemplaire valide");
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nCe n'est pas un numero d'exemplaire valide");
+		}
+	}
+
+	/**
+	 * Remplissage de la partie info en fonction de la listData
+	 * @param temp
+	 */
+	private void affichageInfo(Exemplaire temp) {
+		Livre liv;
+		Auteur aut;
+		Theme thm;
+		try {
+			liv = LivreManager.getLivreInfo(temp);
+			textFieldTitre.setText(liv.getTitre());
+			aut = AuteurManager.getAuteur(new Auteur(liv.getNum_auteur()));
+			textFieldAuteur.setText(aut.toString());
+			thm = ThemeManager.getTheme(new Theme(liv.getNum_theme()));
+			textFieldTheme.setText(thm.getTheme());
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nMethode affichageInfo()");
+			e.printStackTrace();
+		}
+	}
+	
+	private void initControle() {
 		JPanel panRechercheResultats = new JPanel();
 		add(panRechercheResultats);
 		panRechercheResultats.setLayout(new BoxLayout(panRechercheResultats, BoxLayout.Y_AXIS));
@@ -136,89 +225,9 @@ public class RechercherUnLivre extends JPanel {
 
 		//Abonnement aux Listeners
 		textFieldExemplaire.addActionListener(new appActionListener());
-		textFieldExemplaire.addKeyListener(new AppKeyListener());
+		textFieldExemplaire.addKeyListener(new AppKeyListener());		
 	}
-
-	// Listener
-	class AppKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if(e.getSource() == textFieldExemplaire){
-				textFieldTitre.setText("");
-				textFieldAuteur.setText("");
-				textFieldTheme.setText("");	
-				lblRechercheStatus.setText("");
-			}
-		}
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// Auto-generated method stub
-		}
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// Auto-generated method stub
-		}
-	}
-
-	public class appActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == textFieldExemplaire){
-				textFieldExemplaire_click();
-			}
-		}
-	}
-
-	// **********************************Methodes**********************************//
-	public void addBoutonCreerLivre() {
-		JButton ajouterLivre = new JButton("Ajouter un livre ");
-		panRechercheBoutton.add(ajouterLivre);
-	}
-	//Recherche par numero d'exemplaire
-	public void textFieldExemplaire_click() {
-		try {
-			listData.setRowCount(0);
-			tempRecherExemp = ExemplaireManager.getExemplaire(new Exemplaire(Integer.valueOf(textFieldExemplaire.getText())));
-			if (tempRecherExemp != null) {
-				listData.addRow(tempRecherExemp.toInfoVector());
-				if(FenetreConnexion.isEstConnecte()){
-					affichageInfo(tempRecherExemp);
-					FenetrePrincipale.partieEmploye.getGestEmpruntInformationLivre().refreshInfoLivre();
-				}else{
-					FenetrePrincipale.partieVisiteur.getModuleInformationLivre().refreshInfoLivre();
-				}
-			} else {
-				lblRechercheStatus.setText("Pas d'exemplaire avec ce numero");
-				System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nPas d'exemplaire avec ce numero");
-			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-Tag:1");
-			e.printStackTrace();
-		} catch (SQLException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-Tag:2");
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			lblRechercheStatus.setText("Ce n'est pas un numero d'exemplaire valide");
-			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nCe n'est pas un numero d'exemplaire valide");
-		}
-	}
-	//Remplissage de la partie info en fonction de la listData
-	private void affichageInfo(Exemplaire temp) {
-		Livre liv;
-		Auteur aut;
-		Theme thm;
-		try {
-			liv = LivreManager.getLivreInfo(temp);
-			textFieldTitre.setText(liv.getTitre());
-			aut = AuteurManager.getAuteur(new Auteur(liv.getNum_auteur()));
-			textFieldAuteur.setText(aut.toString());
-			thm = ThemeManager.getTheme(new Theme(liv.getNum_theme()));
-			textFieldTheme.setText(thm.getTheme());
-		} catch (ClassNotFoundException | SQLException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnLivre-\nMethode affichageInfo()");
-			e.printStackTrace();
-		}
-	}
+	
 	// **********************************Accesseurs**********************************//
 	public JTextField getTextFieldTitre() {
 		return textFieldTitre;

@@ -74,18 +74,6 @@ public class Header extends JPanel {
 		panQuitter.add(btnQuitter);
 	}
 
-	// ***********************************************Accesseurs*****************************************//
-	public JLabel getLblHeaderSeConnecter() {
-		return lblHeaderSeConnecter;
-	}
-
-	public void setLblHeaderSeConnecter(JLabel lblHeaderSeConnecter) {
-		this.lblHeaderSeConnecter = lblHeaderSeConnecter;
-	}
-	public FenetreConnexion getFenetreConnexion() {
-		return fenetreConnexion;
-	}
-
 	// ***********************************************Listerners*****************************************//
 	class AppActionListener implements ActionListener {
 		@Override
@@ -100,7 +88,7 @@ public class Header extends JPanel {
 	class AppMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// Auto-generated method stub
+			//Appel de la fenetre de connexion en fonction de l'etat de la session
 			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se connecter")) {
 				fenetreConnexion = new FenetreConnexion();
 				fenetreConnexion.setVisible(true);
@@ -112,30 +100,33 @@ public class Header extends JPanel {
 				FenetrePrincipale.changerPartieClient();
 			}
 		}
-
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// Auto-generated method stub
-
 		}
-
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// Auto-generated method stub
-
 		}
-
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// Auto-generated method stub
-
 		}
-
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// Auto-generated method stub
-
 		}
+	}
 
+	// ***********************************************Accesseurs*****************************************//
+	public JLabel getLblHeaderSeConnecter() {
+		return lblHeaderSeConnecter;
+	}
+
+	public void setLblHeaderSeConnecter(JLabel lblHeaderSeConnecter) {
+		this.lblHeaderSeConnecter = lblHeaderSeConnecter;
+	}
+	public FenetreConnexion getFenetreConnexion() {
+		return fenetreConnexion;
 	}
 }

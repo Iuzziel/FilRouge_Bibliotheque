@@ -27,6 +27,11 @@ public class GestionStock extends JPanel {
 		setPreferredSize(new Dimension(250, 500));
 		setLayout(new BorderLayout(5, 5));
 
+		initControle();
+	}
+
+	//Methodes
+	private void initControle() {
 		// Creation du panel principal
 		JPanel panGestionListe = new JPanel();
 		panGestionListe.setBorder(new TitledBorder(null, "Gestion des Listes", TitledBorder.LEADING, TitledBorder.TOP));
@@ -133,6 +138,6 @@ public class GestionStock extends JPanel {
 		 * JRadioButton("En retard"); ButtonGroup grpEmprunte = new ButtonGroup();
 		 * JRadioButton optEmprunteEnRegle = new JRadioButton("En regle"); JRadioButton
 		 * optEmprunteEnRetard = new JRadioButton("En retard");
-		 */
+		 */		
 	}
 }

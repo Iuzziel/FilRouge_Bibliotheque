@@ -31,6 +31,11 @@ public class GestionEmployesEdition extends JPanel {
 		this.setBorder(new TitledBorder(null, "Affichage des informations detaillees de l'employe selectionne", TitledBorder.LEADING, TitledBorder.TOP));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		initControle();
+	}
+
+	//Methodes
+	private void initControle() {
 		// Creation d'un panel pour les infos
 		JPanel panInfo = new JPanel();
 		add(panInfo);
@@ -122,7 +127,7 @@ public class GestionEmployesEdition extends JPanel {
 		panBtn.add(btnEditer);
 		panBtn.add(btnAnnuler);
 		panBtn.add(btnSupprimer);
-		this.add(panBtn);
+		this.add(panBtn);		
 	}
 
 	// Accesseurs

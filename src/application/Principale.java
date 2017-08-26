@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import javax.swing.UIManager;
@@ -22,8 +23,11 @@ public class Principale {
 		//recuperation de la resolution de la taille de l'affichage
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		Rectangle tailleEcran = ge.getMaximumWindowBounds();
-
 		fenetrePrincipale.setSize(tailleEcran.getSize());
+		
+		//Passage en maximise
+		fenetrePrincipale.setExtendedState(Frame.MAXIMIZED_BOTH);
+		
 		fenetrePrincipale.setVisible(true);
 		//fenetrePrincipale.setAlwaysOnTop(true);
 	}

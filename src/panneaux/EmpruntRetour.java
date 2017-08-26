@@ -64,38 +64,13 @@ public class EmpruntRetour extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnEmprAjouter) {
-				lblEmprStatut.setText("");
-				lblEmprStatut.setIcon(null);
-				lblEmprStatut.setForeground(Color.RED);
-				nbEmpruntMaxAdherent = getNbEmpruntMaxAdherent();
-				if(vectExemplaire.size() < nbEmpruntMaxAdherent){
-					btnEmprAjouter_Click();
-				}else{
-					System.out.println("Pkg:panneaux-Class:EmpruntRetour\nNb max d'emprunt atteint");
-				}
+				btnEmprAjouter_Click();
 			}
 			if(e.getSource() == btnEmprSupprimer) {
-				lblEmprStatut.setText("");
-				lblEmprStatut.setIcon(null);
-				lblEmprStatut.setForeground(Color.RED);
-				empruntListData.removeRow(vectExemplaire.size()-1);//Affichage
-				vectExemplaire.removeElement(vectExemplaire.lastElement());//Vecteur de l'emprunt en cours
-				System.out.println("Pkg:panneaux-Class:EmpruntRetour\nvectExemplaire.size() = " + vectExemplaire.size());
+				btnEmprSupprimer_Click();
 			}
 			if(e.getSource() == btnEmpruntEnregistrerFinal) {
-				lblEmprStatut.setText("");
-				lblEmprStatut.setIcon(null);
-				try {
-					int tmpNumEmp = EmpruntManager.creerEmprunt(new Adherent(FenetrePrincipale.partieEmploye.getRechercherUnAdherent().getTempAdher().getNum_adherent()));
-					for (Exemplaire ex : vectExemplaire) {//Vecteur de l'emprunt en cours parcouru et ajouter dans LigEmprunt
-						EmpruntManager.setEmprunt(tmpNumEmp, ex);
-					}
-					lblEmprStatut.setForeground(Color.GREEN);
-					lblEmprStatut.setText("Enregistrement reussi.");
-				} catch (ClassNotFoundException | SQLException e1) {
-					System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:2");
-					e1.printStackTrace();
-				}
+				btnEmpruntEnregistrerFinal_Click();
 			}
 			if(e.getSource() == btnRetAjouter) {
 			}
@@ -129,33 +104,84 @@ public class EmpruntRetour extends JPanel {
 		}
 		return tmp;
 	}
+
 	/**
-	 * Ajoute l'exemplaire selectionné au vecteur temporaire d'emprunt,
+	 * Initialise le label du statut du panel emprunt.
+	 * Vide, pas d'icone, couleur par defaut du text Rouge.
+	 */
+	private void initLblEmprStatut(){
+		lblEmprStatut.setText("");
+		lblEmprStatut.setIcon(null);
+		lblEmprStatut.setForeground(Color.RED);
+	}
+	
+	/**
+	 * Ajoute l'exemplaire selectionne au vecteur temporaire d'emprunt,
 	 * apres un click sur le bouton ajouter du panEmprunt.
 	 */
 	private void btnEmprAjouter_Click() {
-		boolean nouveau = true;//Booleen pour verifier si l'exemplaire n'a pas ete ajoute plusieurs fois dans le meme emprunt
-		Exemplaire ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
-		for (Exemplaire exTemp : vectExemplaire) {
-			if(exTemp.equals(ex)) nouveau = false;
-		}
-		try {
-			if (nouveau && LigEmpruntManager.getDisp(ex).equals("Oui")) {
-				vectExemplaire.addElement(ex);
-				empruntListData.addRow(ex.toEmpRetVector());
-			}else if(!nouveau){
-				lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
-				lblEmprStatut.setText("Livre deja scanne!");
-				System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:1");
-			}else{
-				lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
-				lblEmprStatut.setText("Livre indisponible!");
+		initLblEmprStatut();
+		nbEmpruntMaxAdherent = getNbEmpruntMaxAdherent();
+		if(vectExemplaire.size() < nbEmpruntMaxAdherent){
+			boolean nouveau = true;//Booleen pour verifier si l'exemplaire n'a pas ete ajoute plusieurs fois dans le meme emprunt
+			Exemplaire ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
+			for (Exemplaire exTemp : vectExemplaire) {
+				if(exTemp.equals(ex)) nouveau = false;
 			}
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				if (nouveau && LigEmpruntManager.getDisp(ex).equals("Oui")) {
+					vectExemplaire.addElement(ex);
+					empruntListData.addRow(ex.toEmpRetVector());
+				}else if(!nouveau){
+					lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+					lblEmprStatut.setText("Livre deja scanne!");
+					System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:1");
+				}else{
+					lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+					lblEmprStatut.setText("Livre indisponible!");
+				}
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			lblEmprStatut.setForeground(Color.RED);
+			lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+			lblEmprStatut.setText("Nombre d'exemplaire maximum atteint");
+			System.out.println("Pkg:panneaux-Class:EmpruntRetour\nNb max d'emprunt atteint");
 		}
 	}
+
+	/**
+	 * Supprime l'exemplaire selectionne du vecteur temporaire d'emprunt,
+	 * apres un click sur le bouton supprimer du panEmprunt.
+	 */
+	private void btnEmprSupprimer_Click() {
+		initLblEmprStatut();
+		empruntListData.removeRow(vectExemplaire.size()-1);//Affichage
+		vectExemplaire.removeElement(vectExemplaire.lastElement());//Vecteur de l'emprunt en cours
+		System.out.println("Pkg:panneaux-Class:EmpruntRetour\nvectExemplaire.size() = " + vectExemplaire.size());			
+	}
+
+	/**
+	 * Enregistre un nouvel emprunt, 
+	 * et y associe les livre du vecteur temp d'exemplaire dans LigEmprunt.
+	 */
+	private void btnEmpruntEnregistrerFinal_Click() {
+		initLblEmprStatut();
+		try {
+			int tmpNumEmp = EmpruntManager.creerEmprunt(new Adherent(FenetrePrincipale.partieEmploye.getRechercherUnAdherent().getTempAdher().getNum_adherent()));
+			for (Exemplaire ex : vectExemplaire) {//Vecteur de l'emprunt en cours parcouru et ajouter dans LigEmprunt
+				EmpruntManager.setEmprunt(tmpNumEmp, ex);
+			}
+			lblEmprStatut.setForeground(Color.GREEN);
+			lblEmprStatut.setText("Enregistrement reussi.");
+		} catch (ClassNotFoundException | SQLException e1) {
+			System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:2");
+			e1.printStackTrace();
+		}			
+	}
+
 
 	//Initialisation du panel
 	private void initControle() {
@@ -186,8 +212,8 @@ public class EmpruntRetour extends JPanel {
 		srlLivreEmpruntScanne = new JScrollPane(jTabLivreEmpruntScan);
 		panEmprCentre.add(srlLivreEmpruntScanne);
 		srlLivreEmpruntScanne.setViewportBorder(new BevelBorder(BevelBorder.LOWERED));
-		
-		lblEmprStatut.setForeground(Color.RED);
+
+		initLblEmprStatut();
 		lblEmprStatut.setHorizontalAlignment(SwingConstants.CENTER);
 		panEmprCentre.add(lblEmprStatut);
 

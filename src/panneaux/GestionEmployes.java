@@ -34,6 +34,30 @@ public class GestionEmployes extends JPanel {
 		setPreferredSize(new Dimension(250, 500));
 		setLayout(new BorderLayout(5, 5));
 
+		initControle();
+	}
+
+	// Listener
+	public class appActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == btnCreerUnEmploye) {
+				CreerUnEmploye fenetreCreerEmploye = new CreerUnEmploye();
+				fenetreCreerEmploye.setLocationRelativeTo(null);
+				fenetreCreerEmploye.setVisible(true);
+				fenetreCreerEmploye.setAlwaysOnTop(true);;
+			}
+			if(e.getSource() == btnCreerUneBibliotheque) {
+				CreerUneBibliotheque fenetreCreerBibliotheque = new CreerUneBibliotheque();
+				fenetreCreerBibliotheque.setLocationRelativeTo(null);
+				fenetreCreerBibliotheque.setVisible(true);
+				fenetreCreerBibliotheque.setAlwaysOnTop(true);;
+			}
+		}
+	}
+
+	//Methodes
+	private void initControle() {
 		// Creation du panel principal
 		JPanel panGestionEmployes = new JPanel();
 		panGestionEmployes.setBorder(
@@ -130,27 +154,7 @@ public class GestionEmployes extends JPanel {
 
 		// Abonnement aux listeners
 		btnCreerUnEmploye.addActionListener(new appActionListener());
-		btnCreerUneBibliotheque.addActionListener(new appActionListener());
-
-	}
-
-	// Listener
-	public class appActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnCreerUnEmploye) {
-				CreerUnEmploye fenetreCreerEmploye = new CreerUnEmploye();
-				fenetreCreerEmploye.setLocationRelativeTo(null);
-				fenetreCreerEmploye.setVisible(true);
-				fenetreCreerEmploye.setAlwaysOnTop(true);;
-			}
-			if(e.getSource() == btnCreerUneBibliotheque) {
-				CreerUneBibliotheque fenetreCreerBibliotheque = new CreerUneBibliotheque();
-				fenetreCreerBibliotheque.setLocationRelativeTo(null);
-				fenetreCreerBibliotheque.setVisible(true);
-				fenetreCreerBibliotheque.setAlwaysOnTop(true);;
-			}
-		}
+		btnCreerUneBibliotheque.addActionListener(new appActionListener());		
 	}
 
 	// Accesseurs

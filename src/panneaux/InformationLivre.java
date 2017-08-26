@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.sql.SQLException;
-
 import javax.swing.border.EmptyBorder;
 
 public class InformationLivre extends JPanel {
@@ -50,11 +49,22 @@ public class InformationLivre extends JPanel {
 	}
 
 	//*********************************************Methodes*****************************************//
+	/**
+	 * Rend le commentaire editable si true.
+	 * @param bool
+	 */
 	public void setCommentaireEditable(boolean bool) {
 		this.txtAreaComment.setEditable(bool);
 		return;
 	}
 
+	/**
+	 *if(bool) {
+	 *	this.panInfoNord.remove(panInfoNordExemplaire);
+	 *	this.panInfoNord.remove(panInfoNordComboEtat);
+	 *}
+	 * @param bool
+	 */
 	public void setInformationLivreClient(boolean bool) {
 		if(bool) {
 			this.panInfoNord.remove(panInfoNordExemplaire);
@@ -62,6 +72,29 @@ public class InformationLivre extends JPanel {
 		}
 		return;
 	}
+	
+	/**
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	private void cboEtat_Create() 
+			throws ClassNotFoundException, SQLException {
+		for (String string : EtatManager.getVectorAllEtat()) {
+			cboEtat.addItem(string);	
+		}		
+	}
+	
+	/**
+	 * Definie l'etat, donc l'affichage du statut de la combo.
+	 * @param i
+	 */
+	public void setComboEtat(int i) {
+		this.cboEtat.setSelectedIndex(i);
+	}
+	
+	/**
+	 * Rafraichit les info du paInfo en fonction du NUMERO D'EXEMPLAIRE de la recherche.
+	 */
 	public void refreshInfoLivre(){//TODO Finir les recups
 		Livre liv;
 		try {
@@ -81,25 +114,12 @@ public class InformationLivre extends JPanel {
 			textFieldNbExemplaireDispo.setText("LigEmpruntManager.getNbDispo");
 			textFieldNbExemplaireDispoBiblio.setText("LigEmpruntManager.getNbDispoBiblio");
 			txtAreaComment.setText(liv.getLivre_comment());
+			//num_etat commence a 1, et la cbo a 0. Donc -1.
+			cboEtat.setSelectedIndex(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_etat() - 1);
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("Pkg:panneaux-Class:InformationLivre-Tag:1");
 			e.printStackTrace();
 		}
-	}
-
-	//TODO Changer pour le getEtat de l'exemplaire
-	/**
-	 * Definie l'etat, donc l'affichage du statut de la combo.
-	 * 0 - Excellent 
-	 * 1 - Tres bon 
-	 * 2 - Bon 
-	 * 3 - Mauvais 
-	 * 4 - Perdu
-	 * 
-	 * @param i
-	 */
-	public void setComboEtat(int i) {
-		this.cboEtat.setSelectedIndex(i);
 	}
 
 	private void initControle() {
@@ -203,12 +223,12 @@ public class InformationLivre extends JPanel {
 		panInfoNordComboEtat.setLayout(new GridLayout(0, 2, 0, 0));
 		JLabel lblEtat = new JLabel("Etat de l'exemplaire :");
 		panInfoNordComboEtat.add(lblEtat);
-		//TODO Changer ca dans la version finale
-		cboEtat.addItem("Excellent");
-		cboEtat.addItem("Tres bon");
-		cboEtat.addItem("Bon");
-		cboEtat.addItem("Mauvais");
-		cboEtat.addItem("Perdu");
+		try {
+			cboEtat_Create();
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:Panneau-Class:InformationLivre\nEchec de la creation de la combo en fonction de la Table Etat de la BDD.");
+			e.printStackTrace();
+		}
 		panInfoNordComboEtat.add(cboEtat);
 
 		///////////////////// Zone Centre, commentaire/////////////////////
@@ -248,6 +268,7 @@ public class InformationLivre extends JPanel {
 		textFieldExemplaire.setEditable(false);
 		txtAreaComment.setEditable(false);
 	}
+
 	//************************************************* Accesseurs***************************************//
 	public JTextField getTextFieldTitre() {
 		return textFieldTitre;
