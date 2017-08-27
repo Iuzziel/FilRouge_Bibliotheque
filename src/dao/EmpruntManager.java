@@ -24,7 +24,7 @@ public class EmpruntManager {
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setInt(1, emprunt.num_emprunt);
+		stm.setInt(1, emprunt.getNum_emprunt());
 
 		ResultSet rs = stm.executeQuery();
 
@@ -177,7 +177,7 @@ public class EmpruntManager {
 				ConnectionManager.getConnection().prepareStatement(sql);
 
 		stm.setString(1, "SYSDATE");
-		stm.setInt(2, emprunt.num_emprunt);
+		stm.setInt(2, emprunt.getNum_emprunt());
 
 		int res = stm.executeUpdate();
 

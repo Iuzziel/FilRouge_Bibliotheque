@@ -8,21 +8,23 @@ public class Exemplaire {
 	private int num_livre;
 	private int num_biblio;
 	private int num_etat;
+	private int num_emplacement;
 
 	public Exemplaire (int num_exemplaire){
 		this.num_exemplaire = num_exemplaire;
 	}
 
-	public Exemplaire (int num_exemplaire, int num_livre, int num_biblio, int num_etat){
+	public Exemplaire (int num_exemplaire, int num_livre, int num_biblio, int num_etat, int num_emplacement){
 		this.num_exemplaire = num_exemplaire;
 		this.num_livre = num_livre;
 		this.num_biblio = num_biblio;
 		this.num_etat = num_etat;
+		this.num_emplacement = num_emplacement;
 
 	}
 
 	public String toString(){
-		return num_exemplaire + " " + num_livre + " " + num_biblio + " " + num_etat;
+		return num_exemplaire + " " + num_livre + " " + num_biblio + " " + num_etat + " " + num_emplacement;
 	}
 
 	public Vector<String> toVector(){
@@ -101,33 +103,17 @@ public class Exemplaire {
 	public int getNum_exemplaire() {
 		return num_exemplaire;
 	}
-
-	public void setNum_exemplaire(int num_exemplaire) {
-		this.num_exemplaire = num_exemplaire;
-	}
-
 	public int getNum_livre() {
 		return num_livre;
 	}
-
-	public void setNum_livre(int num_livre) {
-		this.num_livre = num_livre;
-	}
-
 	public int getNum_biblio() {
 		return num_biblio;
 	}
-
-	public void setNum_biblio(int num_biblio) {
-		this.num_biblio = num_biblio;
-	}
-
 	public int getNum_etat() {
 		return num_etat;
 	}
-
-	public void setNum_etat(int num_etat) {
-		this.num_etat = num_etat;
+	public int getNum_emplacement() {
+		return num_emplacement;
 	}
 
 }

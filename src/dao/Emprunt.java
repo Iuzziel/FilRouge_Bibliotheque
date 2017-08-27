@@ -6,10 +6,10 @@ import java.sql.Date;
 
 public class Emprunt {
 
-	public int num_emprunt;
-	public int num_adherent;
-	public Date emp_date_emp;
-	public Date emp_date_ret;
+	private int num_emprunt;
+	private int num_adherent;
+	private Date emp_date_emp;
+	private Date emp_date_ret;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -35,4 +35,17 @@ public class Emprunt {
 		v.add(sdf.format(emp_date_ret));
 		return v;
 	}
+
+	public int getNum_emprunt() {
+		return num_emprunt;
+	}
+	public int getNum_adherent() {
+		return num_adherent;
+	}
+	public Date getEmp_date_emp() {
+		return emp_date_emp;
+	}
+	public Date getEmp_date_ret() {
+		return emp_date_ret;
+	}	
 }

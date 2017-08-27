@@ -4,41 +4,38 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ExemplaireManager {
-
+public class EmplacementManager {
 	/**
-	 * Retourne un livre a partir de son numero
+	 * Retourne un emprunt a partir de son numero
 	 * @param 
-	 * @return Livre
+	 * @return Emprunt
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static Exemplaire getExemplaire(Exemplaire exemplaire) 
+	public static Emplacement getEmplacement(Emplacement emplacement) 
 			throws ClassNotFoundException, SQLException{
 
-		Exemplaire tmp = null;
+		Emplacement tmp = null;
 
-		String sql = "SELECT * FROM exemplaire WHERE num_exemplaire = ?";
+		String sql = "SELECT * FROM emplacement WHERE num_emplacement = ?";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setInt(1, exemplaire.getNum_exemplaire());
+		stm.setInt(1, emplacement.getNum_emplacement());
 
 		ResultSet rs = stm.executeQuery();
 
 		if(rs.next())
 		{
-			tmp = new Exemplaire(rs.getInt("num_exemplaire"),
-					rs.getInt("num_livre"),
+			tmp = new Emplacement(rs.getInt("num_emplacement"),
+					rs.getInt("num_theme"),
 					rs.getInt("num_biblio"),
-					rs.getInt("num_etat"),
-					rs.getInt("num_emplacement"));
+					rs.getString("emplacement"));
 		}
 
 		rs.close();
 		stm.close();	
 		return tmp;
 	}
-
 }

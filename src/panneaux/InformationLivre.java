@@ -97,21 +97,24 @@ public class InformationLivre extends JPanel {
 	 */
 	public void refreshInfoLivre(){//TODO Finir les recups
 		Livre liv;
+		Exemplaire ex;
 		try {
 			if(FenetreConnexion.isEstConnecte()){
-				liv = LivreManager.getLivre(new Livre(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_livre()));
-				textFieldExemplaire.setText(String.valueOf(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_exemplaire()));
+				ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
+				liv = LivreManager.getLivre(new Livre(ex.getNum_livre()));
+				textFieldExemplaire.setText(String.valueOf(ex.getNum_exemplaire()));
 			}else{
-				liv = LivreManager.getLivre(new Livre(FenetrePrincipale.partieVisiteur.getModuleRechercheLivre().getTempRecherExemp().getNum_livre()));
-				textFieldExemplaire.setText(String.valueOf(FenetrePrincipale.partieVisiteur.getModuleRechercheLivre().getTempRecherExemp().getNum_exemplaire()));
+				ex = FenetrePrincipale.partieVisiteur.getModuleRechercheLivre().getTempRecherExemp();
+				liv = LivreManager.getLivre(new Livre(ex.getNum_livre()));
+				textFieldExemplaire.setText(String.valueOf(ex.getNum_exemplaire()));
 			}
 			textFieldTitre.setText(liv.getTitre());
 			textFieldAuteur.setText(AuteurManager.getAuteur(new Auteur(liv.getNum_auteur())).toString());
 			textFieldTheme.setText(ThemeManager.getTheme(new Theme(liv.getNum_theme())).getTheme());
-			textFieldEmplacement.setText("EmplacementManager.getEmplacement");
+			textFieldEmplacement.setText(EmplacementManager.getEmplacement(new Emplacement(ex.getNum_emplacement())).getEmplacement());
 			textFieldISBN.setText(liv.getISBN());
 			textFieldISSN.setText(liv.getISSN());
-			textFieldNbExemplaireDispo.setText("LigEmpruntManager.getNbDispo");
+			textFieldNbExemplaireDispo.setText(LigEmpruntManager.getDisp(ex));
 			textFieldNbExemplaireDispoBiblio.setText("LigEmpruntManager.getNbDispoBiblio");
 			txtAreaComment.setText(liv.getLivre_comment());
 			//num_etat commence a 1, et la cbo a 0. Donc -1.
