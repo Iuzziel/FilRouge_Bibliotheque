@@ -39,6 +39,40 @@ public class EmpruntManager {
 		stm.close();	
 		return tmp;
 	}
+	
+	/**
+	 * Retourne un Vector<Emprunt> depuis un adherent.
+	 * @param adherent
+	 * @return Vector<Emprunt>
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static Vector<Emprunt> getEmprAdher(Adherent adherent) 
+			throws ClassNotFoundException, SQLException{
+
+		Vector<Emprunt> tmp = new Vector<Emprunt>();
+
+		String sql = "SELECT * FROM emprunt WHERE num_adherent = ?";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setInt(1, adherent.getNum_adherent());
+
+		ResultSet rs = stm.executeQuery();
+
+		if(rs.next())
+		{
+			tmp.add(new Emprunt(rs.getInt("num_emprunt"),
+					rs.getInt("num_adherent"),
+					rs.getDate("emp_date_emp"),
+					rs.getDate("emp_date_ret")));
+		}
+
+		rs.close();
+		stm.close();	
+		return tmp;
+	}
 
 	/**
 	 * Retourne un le nombre de livre emprunte par un adherent 

@@ -6,14 +6,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 import dao.Adherent;
 import dao.AdherentManager;
+import dao.Emprunt;
 import dao.EmpruntManager;
 import dao.Exemplaire;
 import dao.ExemplaireManager;
+import dao.LigEmpruntManager;
+import dao.Parametre;
+import dao.ParametreManager;
 import fenetres.CreerUnAdherent;
 
 public class RechercherUnAdherent extends JPanel {
@@ -24,7 +32,6 @@ public class RechercherUnAdherent extends JPanel {
 	private static final long serialVersionUID = -3793794312904965025L;
 
 	// Donnees membre
-	// TODO Penser a changer avec getter et setter dans le code final
 	private JTextField textFieldNom;
 	private JTextField textFieldPrenom;
 	private JTextField textFieldNumeroAdherent;
@@ -46,6 +53,10 @@ public class RechercherUnAdherent extends JPanel {
 	private JPanel panInfoAdherentPersoBtn = new JPanel();
 	private JLabel lblRechercheStatus = new JLabel("");
 	private Adherent tempAdher;
+	private boolean cotisationOk = false;
+	private boolean penaliteOk = false;
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	// Constructeur
 	public RechercherUnAdherent() {
@@ -62,8 +73,7 @@ public class RechercherUnAdherent extends JPanel {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			lblRechercheStatus.setText("");
-			// Auto-generated method stub
-		}
+			}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -135,13 +145,68 @@ public class RechercherUnAdherent extends JPanel {
 
 	//Remplissage de la partie info en fonction de la listData
 	private void affichageInfo() {
+		txtFieldInfoNom.setText("");
+		txtFieldInfoPrenom.setText("");
+		txtFieldInfoDateCoti.setText("");
+		txtFieldInfoAdresse.setText("");
+
 		txtFieldInfoNom.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 1)));
 		txtFieldInfoPrenom.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 2)));
 		txtFieldInfoAdresse.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 3)));
 		txtFieldInfoDateCoti.setText(String.valueOf(lisDatResultRechAdh.getValueAt(0, 5)));
-		//TODO Faire les controle cotisation ok
-		txtFieldInfoCotiOk.setText("getCotiOk? A Faire");
-		txtFieldInfoCotiOk.setBackground(Color.GREEN);
+		verifCoti();
+		verifPenalite();
+	}
+
+	private void verifPenalite() {
+		txtFieldPenaliteEnCours.setText("");
+		txtFieldPenaliteEnCours.setBackground(Color.GRAY);
+		long temp = 0l;
+		try {
+			Vector<Emprunt> vEmpr = EmpruntManager.getEmprAdher(tempAdher);
+			for (Emprunt emprunt : vEmpr) {
+				if (emprunt.getEmp_date_ret() == null) {
+					Date today = new Date();                   
+					Calendar c = Calendar.getInstance();
+					c.setTime(emprunt.getEmp_date_emp());
+					c.add(Calendar.DAY_OF_YEAR, ParametreManager.getParametre(new Parametre("nbjouremprunt")).getValeur());
+					Date tempDate = c.getTime();
+					if(today.compareTo(tempDate) <= 0){
+						penaliteOk = true;
+						txtFieldPenaliteEnCours.setText("Pas de retard");	
+						txtFieldPenaliteEnCours.setBackground(Color.GREEN);
+					}else{
+						temp = ((today.getTime() - c.getTimeInMillis()) / 1000 / 60 / 60 / 24) * LigEmpruntManager.getNbExempInEmp(emprunt.getNum_emprunt());
+						penaliteOk = false;
+						txtFieldPenaliteEnCours.setText("Montant : " + (temp) + "€");	
+						txtFieldPenaliteEnCours.setBackground(Color.RED);
+					}
+				}
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:7");
+			e.printStackTrace();
+		}
+	}
+
+	private void verifCoti() {
+		txtFieldInfoCotiOk.setText("");
+		txtFieldInfoCotiOk.setBackground(Color.GRAY);
+		Date today = new Date();                   
+		Date dateCoti = tempAdher.getAdherDateCoti();
+		Calendar c = Calendar.getInstance();
+		c.setTime(dateCoti);
+		c.add(Calendar.YEAR, 1);
+		Date tempDate = c.getTime();
+		txtFieldInfoCotiOk.setText(sdf.format(tempDate));
+		if(today.compareTo(tempDate) <= 0){
+			cotisationOk = true;
+			txtFieldInfoCotiOk.setBackground(Color.GREEN);
+		}else{
+			cotisationOk = false;
+			txtFieldInfoCotiOk.setBackground(Color.RED);
+		}
+
 	}
 
 	private void initControle() {
@@ -319,7 +384,6 @@ public class RechercherUnAdherent extends JPanel {
 		panInfoAdherentPersoBtn.add(btnEditerCetAdhrent);
 
 		// Creation de la Jtable, association a la JScrollPane, puis ajout dans le panel
-		// TODO Remplir la JTable
 		JPanel panInfoEmpruntAdherent = new JPanel();
 		panInfoAdherent.add(panInfoEmpruntAdherent, BorderLayout.CENTER);
 		panInfoEmpruntAdherent.setLayout(new BorderLayout(5, 5));
@@ -341,85 +405,40 @@ public class RechercherUnAdherent extends JPanel {
 	public JTextField getTextFieldNom() {
 		return textFieldNom;
 	}
-
-	public void setTextFieldNom(JTextField textFieldNom) {
-		this.textFieldNom = textFieldNom;
-	}
-
 	public JTextField getTextFieldPrenom() {
 		return textFieldPrenom;
 	}
-
-	public void setTextFieldPrenom(JTextField textFieldPrenom) {
-		this.textFieldPrenom = textFieldPrenom;
-	}
-
 	public JTextField getTextFieldNumeroAdherent() {
 		return textFieldNumeroAdherent;
 	}
-
-	public void setTextFieldNumeroAdherent(JTextField textFieldNumeroAdherent) {
-		this.textFieldNumeroAdherent = textFieldNumeroAdherent;
-	}
-
 	public JTextField getTxtFieldInfoNom() {
 		return txtFieldInfoNom;
 	}
-
-	public void setTxtFieldInfoNom(JTextField txtFieldInfoNom) {
-		this.txtFieldInfoNom = txtFieldInfoNom;
-	}
-
 	public JTextField getTxtFieldInfoPrenom() {
 		return txtFieldInfoPrenom;
 	}
-
-	public void setTxtFieldInfoPrenom(JTextField txtFieldInfoPrenom) {
-		this.txtFieldInfoPrenom = txtFieldInfoPrenom;
-	}
-
 	public JTextField getTxtFieldInfoAdresse() {
 		return txtFieldInfoAdresse;
 	}
-
-	public void setTxtFieldInfoAdresse(JTextField txtFieldInfoAdresse) {
-		this.txtFieldInfoAdresse = txtFieldInfoAdresse;
-	}
-
 	public JTextField getTxtFieldInfoDateCote() {
 		return txtFieldInfoDateCoti;
 	}
-
-	public void setTxtFieldInfoDateCote(JTextField txtFieldInfoDateCote) {
-		this.txtFieldInfoDateCoti = txtFieldInfoDateCote;
-	}
-
 	public JTextField getTxtFieldInfoCotiOk() {
 		return txtFieldInfoCotiOk;
 	}
-
-	public void setTxtFieldInfoCotiOk(JTextField txtFieldInfoCotiOk) {
-		this.txtFieldInfoCotiOk = txtFieldInfoCotiOk;
-	}
-
 	public JTable getTabRenvoiResultatsAdherent() {
 		return tabRenvoiResultatsAdherent;
 	}
-
-	public void setTabRenvoiResultatsAdherent(JTable tabRenvoiResultatsAdherent) {
-		this.tabRenvoiResultatsAdherent = tabRenvoiResultatsAdherent;
-	}
-
 	public JTable getTabAdherentLivreEmprunte() {
 		return tabAdherentLivreEmprunte;
 	}
-
-	public void setTabAdherentLivreEmprunte(JTable tabAdherentLivreEmprunte) {
-		this.tabAdherentLivreEmprunte = tabAdherentLivreEmprunte;
-	}
-
 	public Adherent getTempAdher() {
 		return tempAdher;
 	}
-
+	public boolean isCotisationOk() {
+		return cotisationOk;
+	}
+	public boolean isPenaliteOk() {
+		return penaliteOk;
+	}
 }

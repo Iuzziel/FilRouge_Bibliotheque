@@ -95,7 +95,7 @@ public class InformationLivre extends JPanel {
 	/**
 	 * Rafraichit les info du paInfo en fonction du NUMERO D'EXEMPLAIRE de la recherche.
 	 */
-	public void refreshInfoLivre(){//TODO Finir les recups
+	public void refreshInfoLivre(){
 		Livre liv;
 		Exemplaire ex;
 		try {

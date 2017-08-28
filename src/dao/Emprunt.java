@@ -22,6 +22,13 @@ public class Emprunt {
 		this.num_adherent = num_adherent;
 		this.emp_date_emp = emp_date_emp;
 	}
+	
+	public Emprunt (int num_emprunt, int num_adherent, Date emp_date_emp, Date emp_date_ret){
+		this(num_emprunt);
+		this.num_adherent = num_adherent;
+		this.emp_date_emp = emp_date_emp;
+		this.emp_date_ret = emp_date_ret;
+	}
 
 	public String toString(){
 		return num_emprunt + " " + num_adherent + " " + sdf.format(emp_date_emp)+ " " + sdf.format(emp_date_ret);

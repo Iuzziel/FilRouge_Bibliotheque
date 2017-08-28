@@ -67,7 +67,14 @@ public class EmpruntRetour extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnEmprAjouter) {
-				btnEmprAjouter_Click();
+				if(FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isCotisationOk() 
+						&& FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isPenaliteOk()){
+					btnEmprAjouter_Click();
+				}else if(FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isCotisationOk()){
+					lblEmprStatut.setText("Payez d'abord la cotisation!");
+				}else if (FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isPenaliteOk()){
+					lblEmprStatut.setText("Reglez d'abord la penalité!");
+				}
 			}
 			if(e.getSource() == btnEmprSupprimer) {
 				btnEmprSupprimer_Click();

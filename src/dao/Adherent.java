@@ -11,6 +11,7 @@ public class Adherent {
 	private String adherAdresse;
 	private Date adherDateNaiss;
 	private Date adherDateCoti;
+	
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	public Adherent (int num_adherent){
