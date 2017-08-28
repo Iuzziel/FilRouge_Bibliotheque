@@ -65,28 +65,26 @@ public class LigEmpruntManager {
 	}
 
 	/**
-	 * Retourne le nombre d'exemplaire disponible.
-	 * Voir aussi getNbDispBiblio().
+	 * Retourne le nombre d'exemplaire indisponible du meme livre.
+	 * Voir aussi getNbIndispBiblio().
 	 * @param 
 	 * @return int
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static int getNbDisp(Exemplaire exemplaire) 
+	public static int getNbIndisp(Exemplaire exemplaire) 
 			throws ClassNotFoundException, SQLException{
 
 		int tmp = 0;
 
-		String sql = "SELECT COUNT(*) \"nbdisp\" FROM EXEMPLAIRE "
-				+ "JOIN LIGEMPRUNT "
-				+ "ON LIGEMPRUNT.num_exemplaire = EXEMPLAIRE.num_exemplaire "
-				+ "JOIN EMPRUNT "
-				+ "ON EMPRUNT.num_emprunt = LIGEMPRUNT.num_emprunt "
-				+ "JOIN LIVRE "
-				+ "ON EXEMPLAIRE.num_livre = LIVRE.num_livre "
-				+ "WHERE EXEMPLAIRE.num_livre = ? "
-				+ "AND EXEMPLAIRE.num_livre = LIVRE.num_livre "
-				+ "AND EMPRUNT.EMP_DATE_RET IS NOT NULL";
+		String sql = "SELECT COUNT(*) \"nbdisp\" "
+				+ "FROM EXEMPLAIRE e "
+				+ "JOIN LIGEMPRUNT l "
+				+ "ON e.NUM_EXEMPLAIRE = l.NUM_EXEMPLAIRE "
+				+ "JOIN EMPRUNT emp "
+				+ "ON l.NUM_EMPRUNT = EMP.NUM_EMPRUNT "
+				+ "WHERE e.num_livre = ? "
+				+ "AND emp.emp_date_ret IS NULL";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
@@ -104,40 +102,38 @@ public class LigEmpruntManager {
 	}
 
 	/**
-	 * Retourne le nombre d'exemplaire de ce livre dispo dans cette bibliotheque.
-	 * Voir aussi getNbDisp().
+	 * Retourne le nombre d'exemplaire de ce livre indispo dans cette bibliotheque.
+	 * Voir aussi getNbIndisp().
 	 * @param 
 	 * @return int
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static int getNbDispBiblio(Exemplaire exemplaire) 
+	public static int getNbIndispBiblio(Exemplaire exemplaire) 
 			throws ClassNotFoundException, SQLException{
 
 		int tmp = 0;
 
-		String sql = "SELECT COUNT(*) \"nbdisp\" FROM EXEMPLAIRE "
+		String sql = "SELECT COUNT(*) \"nbdisp\" "
+				+ "FROM EXEMPLAIRE "
 				+ "JOIN LIGEMPRUNT "
 				+ "ON LIGEMPRUNT.num_exemplaire = EXEMPLAIRE.num_exemplaire "
 				+ "JOIN EMPRUNT "
 				+ "ON EMPRUNT.num_emprunt = LIGEMPRUNT.num_emprunt "
-				+ "JOIN LIVRE "
-				+ "ON EXEMPLAIRE.num_livre = LIVRE.num_livre "
-				+ "WHERE EXEMPLAIRE.num_exemplaire = ? "
-				+ "AND EXEMPLAIRE.num_livre = LIVRE.num_livre "
+				+ "WHERE EXEMPLAIRE.num_livre = ? "
 				+ "AND EXEMPLAIRE.num_biblio = ?"
-				+ "AND EMPRUNT.EMP_DATE_RET IS NOT NULL";
+				+ "AND EMPRUNT.EMP_DATE_RET IS NULL";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setInt(1, exemplaire.getNum_exemplaire());
-		stm.setInt(1, exemplaire.getNum_biblio());
+		stm.setInt(1, exemplaire.getNum_livre());
+		stm.setInt(2, exemplaire.getNum_biblio());
 
 		ResultSet rs = stm.executeQuery();
 
 		rs.next();
-		tmp = rs.getInt("disp");
+		tmp = rs.getInt("nbdisp");
 
 		rs.close();
 		stm.close();

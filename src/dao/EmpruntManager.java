@@ -78,15 +78,18 @@ public class EmpruntManager {
 	 * Retourne un le vector des num_exemplaire emprunte par un adherent 
 	 * a partir du numero d'adherent.
 	 * @param 
-	 * @return int
+	 * @return Vector<Integer>
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
 	public static Vector<Integer> getEmpruntAdhe(int num_adherent) 
 			throws ClassNotFoundException, SQLException{
 
+		Vector<Integer> tmp = new Vector<Integer>();
+
 		String sql = "SELECT num_exemplaire FROM ligemprunt "
-				+ "JOIN emprunt ON ligemprunt.num_emprunt = emprunt.num_emprunt "
+				+ "JOIN emprunt "
+				+ "ON emprunt.num_emprunt = ligemprunt.num_emprunt "
 				+ "WHERE emprunt.num_adherent = ?";
 
 		PreparedStatement stm = 
@@ -95,8 +98,6 @@ public class EmpruntManager {
 		stm.setInt(1, num_adherent);
 
 		ResultSet rs = stm.executeQuery();
-
-		Vector<Integer> tmp = new Vector<Integer>();
 
 		if(rs.next())
 		{
@@ -168,16 +169,24 @@ public class EmpruntManager {
 		return nbmodif;
 	}
 
+	/**
+	 * Sert pour enregistrer les retours. 
+	 * "UPDATE emprunt SET emp_date_ret = SYSDATE WHERE num_emprunt = ?" .
+	 * Retourne le nombre de lignes mises a jour.
+	 * @param emprunt
+	 * @return int
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public static int updateEmprunt(Emprunt emprunt) 
 			throws ClassNotFoundException, SQLException{
 
-		String sql = "UPDATE emprunt SET emp_date_ret = ? WHERE num_emprunt = ?";
+		String sql = "UPDATE emprunt SET emp_date_ret = SYSDATE WHERE num_emprunt = ?";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setString(1, "SYSDATE");
-		stm.setInt(2, emprunt.getNum_emprunt());
+		stm.setInt(1, emprunt.getNum_emprunt());
 
 		int res = stm.executeUpdate();
 

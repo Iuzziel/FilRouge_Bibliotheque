@@ -103,6 +103,8 @@ public class InformationLivre extends JPanel {
 				ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
 				liv = LivreManager.getLivre(new Livre(ex.getNum_livre()));
 				textFieldExemplaire.setText(String.valueOf(ex.getNum_exemplaire()));
+				//num_etat commence a 1, et la cbo a 0. Donc -1.
+				cboEtat.setSelectedIndex(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_etat() - 1);
 			}else{
 				ex = FenetrePrincipale.partieVisiteur.getModuleRechercheLivre().getTempRecherExemp();
 				liv = LivreManager.getLivre(new Livre(ex.getNum_livre()));
@@ -114,11 +116,11 @@ public class InformationLivre extends JPanel {
 			textFieldEmplacement.setText(EmplacementManager.getEmplacement(new Emplacement(ex.getNum_emplacement())).getEmplacement());
 			textFieldISBN.setText(liv.getISBN());
 			textFieldISSN.setText(liv.getISSN());
-			textFieldNbExemplaireDispo.setText(LigEmpruntManager.getDisp(ex));
-			textFieldNbExemplaireDispoBiblio.setText("LigEmpruntManager.getNbDispoBiblio");
+			System.out.println("Pkg:panneaux-Class:InformationLivre\nex.toString : " + ex.toString());
+			System.out.println("Pkg:panneaux-Class:InformationLivre\nExemplaireManager.getNbDisp(ex) " + ExemplaireManager.getNbDisp(ex) + " LigEmpruntManager.getNbIndisp(ex) " + LigEmpruntManager.getNbIndisp(ex));
+			textFieldNbExemplaireDispo.setText(String.valueOf(ExemplaireManager.getNbDisp(ex) - LigEmpruntManager.getNbIndisp(ex)));
+			textFieldNbExemplaireDispoBiblio.setText(String.valueOf(ExemplaireManager.getNbDispBiblio(ex) - LigEmpruntManager.getNbIndispBiblio(ex)));
 			txtAreaComment.setText(liv.getLivre_comment());
-			//num_etat commence a 1, et la cbo a 0. Donc -1.
-			cboEtat.setSelectedIndex(FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp().getNum_etat() - 1);
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println("Pkg:panneaux-Class:InformationLivre-Tag:1");
 			e.printStackTrace();
