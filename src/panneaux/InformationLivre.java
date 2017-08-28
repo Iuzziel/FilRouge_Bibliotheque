@@ -116,8 +116,6 @@ public class InformationLivre extends JPanel {
 			textFieldEmplacement.setText(EmplacementManager.getEmplacement(new Emplacement(ex.getNum_emplacement())).getEmplacement());
 			textFieldISBN.setText(liv.getISBN());
 			textFieldISSN.setText(liv.getISSN());
-			System.out.println("Pkg:panneaux-Class:InformationLivre\nex.toString : " + ex.toString());
-			System.out.println("Pkg:panneaux-Class:InformationLivre\nExemplaireManager.getNbDisp(ex) " + ExemplaireManager.getNbDisp(ex) + " LigEmpruntManager.getNbIndisp(ex) " + LigEmpruntManager.getNbIndisp(ex));
 			textFieldNbExemplaireDispo.setText(String.valueOf(ExemplaireManager.getNbDisp(ex) - LigEmpruntManager.getNbIndisp(ex)));
 			textFieldNbExemplaireDispoBiblio.setText(String.valueOf(ExemplaireManager.getNbDispBiblio(ex) - LigEmpruntManager.getNbIndispBiblio(ex)));
 			txtAreaComment.setText(liv.getLivre_comment());

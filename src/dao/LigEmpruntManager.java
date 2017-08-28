@@ -139,4 +139,35 @@ public class LigEmpruntManager {
 		stm.close();
 		return tmp;
 	}
+	
+	/**
+	 * Renvoi le nombre d'exemplaire d'un emprunt
+	 * @param num_emprunt
+	 * @return int
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static int getNbExempInEmp(int num_emprunt) 
+			throws ClassNotFoundException, SQLException{
+
+		int tmp = 0;
+
+		String sql = "SELECT COUNT(*) \"nbexemp\" "
+				+ "FROM LIGEMPRUNT l "
+				+ "WHERE l.num_emprunt = ?";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setInt(1, num_emprunt);
+
+		ResultSet rs = stm.executeQuery();
+
+		rs.next();
+		tmp = rs.getInt("nbexemp");
+
+		rs.close();
+		stm.close();
+		return tmp;
+	}
 }

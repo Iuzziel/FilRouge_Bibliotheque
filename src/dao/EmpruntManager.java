@@ -75,6 +75,42 @@ public class EmpruntManager {
 	}
 	
 	/**
+	 * Recupere le numero de l'emprunt en cours a partir d'un exemplaire.
+	 * @param exemplaire
+	 * @return int
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static int getEmpFromExemp(Exemplaire exemplaire) 
+			throws ClassNotFoundException, SQLException{
+
+		String sql = "SELECT EMPRUNT.num_emprunt "
+				+ "FROM EMPRUNT "
+				+ "JOIN LIGEMPRUNT "
+				+ "ON LIGEMPRUNT.NUM_EMPRUNT = EMPRUNT.NUM_EMPRUNT "
+				+ "WHERE LIGEMPRUNT.NUM_EXEMPLAIRE = ? "
+				+ "AND EMPRUNT.emp_date_ret IS NULL";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setInt(1, exemplaire.getNum_exemplaire());
+
+		ResultSet rs = stm.executeQuery();
+
+		int tmp = 0;
+
+		if(rs.next())
+		{
+			tmp = rs.getInt("num_emprunt");
+		}
+
+		rs.close();
+		stm.close();	
+		return tmp;
+	}
+	
+	/**
 	 * Retourne un le vector des num_exemplaire emprunte par un adherent 
 	 * a partir du numero d'adherent.
 	 * @param 
@@ -99,7 +135,7 @@ public class EmpruntManager {
 
 		ResultSet rs = stm.executeQuery();
 
-		if(rs.next())
+		while(rs.next())
 		{
 			tmp.add(rs.getInt("num_exemplaire"));
 		}
@@ -173,12 +209,12 @@ public class EmpruntManager {
 	 * Sert pour enregistrer les retours. 
 	 * "UPDATE emprunt SET emp_date_ret = SYSDATE WHERE num_emprunt = ?" .
 	 * Retourne le nombre de lignes mises a jour.
-	 * @param emprunt
+	 * @param int
 	 * @return int
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static int updateEmprunt(Emprunt emprunt) 
+	public static int updateEmprunt(int num_emprunt) 
 			throws ClassNotFoundException, SQLException{
 
 		String sql = "UPDATE emprunt SET emp_date_ret = SYSDATE WHERE num_emprunt = ?";
@@ -186,7 +222,7 @@ public class EmpruntManager {
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
 
-		stm.setInt(1, emprunt.getNum_emprunt());
+		stm.setInt(1, num_emprunt);
 
 		int res = stm.executeUpdate();
 

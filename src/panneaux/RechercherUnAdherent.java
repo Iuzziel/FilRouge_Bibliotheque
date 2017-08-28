@@ -113,8 +113,7 @@ public class RechercherUnAdherent extends JPanel {
 			tempAdher = AdherentManager.getAdherent(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
 			if (tempAdher != null) {
 				lisDatResultRechAdh.addRow(tempAdher.toVector());
-				for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {//TODO TROUVER POURQUOI CA MARCHE PAAAAAAAAAAAS !
-					System.out.println("Pkg:panneaux-Class:RechercherUnAdherent\ntemp : " + EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent()).toString());
+				for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {
 					lisDatAdhLivEmp.addRow(ExemplaireManager.getExemplaire(new Exemplaire(temp)).toAdherEmpVector());
 				}
 				affichageInfo();
