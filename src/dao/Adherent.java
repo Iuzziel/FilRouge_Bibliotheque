@@ -17,6 +17,11 @@ public class Adherent {
 	public Adherent (int num_adherent){
 		this.num_adherent = num_adherent;
 	}
+	
+	public Adherent (String adherNom, String adherPrenom){
+		this.adherNom = adherNom;
+		this.adherPrenom = adherPrenom;
+	}
 
 	public Adherent (int num_adherent, String adherNom, String adherPrenom, String adherAdresse, Date adherDateNaiss, Date adherDateCoti){
 		this.num_adherent = num_adherent;

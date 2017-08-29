@@ -42,6 +42,8 @@ public class RechercherUnAdherent extends JPanel {
 	private JTextField txtFieldInfoAdresse;
 	private JTextField txtFieldInfoDateCoti;
 	private JTextField txtFieldInfoCotiOk;
+	private JButton btnRechercherAdherent = new JButton("Rechercher");
+	private JButton btnRechercherAdherentReinit = new JButton("R\u00E9initialiser");
 	private String [] colResultRechAdh = {"NUM_ADHERENT", "ADHERNOM", "ADHERPRENOM", "ADHERADRESSE", "ADHERDATENAISS", "ADHERDATECOTI"};
 	private DefaultTableModel lisDatResultRechAdh = new DefaultTableModel(colResultRechAdh, 0);
 	private JTable tabRenvoiResultatsAdherent = new JTable(lisDatResultRechAdh);
@@ -54,6 +56,7 @@ public class RechercherUnAdherent extends JPanel {
 	private JPanel panInfoAdherentPersoBtn = new JPanel();
 	private JLabel lblRechercheStatus = new JLabel("");
 	private Adherent tempAdher;
+	private Vector<Adherent> vtempAdher = new Vector<Adherent>();
 	private boolean cotisationOk = false;
 	private boolean penaliteOk = false;
 	private Vector<Emprunt> vEmprPenalite = new Vector<Emprunt>();
@@ -105,16 +108,27 @@ public class RechercherUnAdherent extends JPanel {
 			if(e.getSource() == textFieldNumeroAdherent) {
 				textFieldNumeroAdherent_click();
 			}
+			if(e.getSource() == btnRechercherAdherent) {
+				btnRechercherAdherent_click();
+			}
+			if(e.getSource() == btnRechercherAdherentReinit) {
+				btnRechercherAdherentReinit_Click();
+			}
 		}
 	}
 
 	//Méthodes
+	private void btnRechercherAdherentReinit_Click() {
+		textFieldNumeroAdherent.setText("");
+		textFieldNumeroAdherent_click();
+	}
+
 	//Recherche par numero adherent
 	private void textFieldNumeroAdherent_click(){
 		try {
 			lisDatResultRechAdh.setRowCount(0);
 			lisDatAdhLivEmp.setRowCount(0);
-			tempAdher = AdherentManager.getAdherent(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
+			tempAdher = AdherentManager.getAdherFromNum(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
 			if (tempAdher != null) {
 				lisDatResultRechAdh.addRow(tempAdher.toVector());
 				for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {
@@ -137,6 +151,45 @@ public class RechercherUnAdherent extends JPanel {
 		}
 	}
 
+
+	private void btnRechercherAdherent_click() {
+		try {
+			lisDatResultRechAdh.setRowCount(0);
+			lisDatAdhLivEmp.setRowCount(0);
+			if(!textFieldNumeroAdherent.getText().equals("")){
+				tempAdher = AdherentManager.getAdherFromNum(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
+				if (tempAdher != null) {
+					lisDatResultRechAdh.addRow(tempAdher.toVector());
+					for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {
+						lisDatAdhLivEmp.addRow(ExemplaireManager.getExemplaire(new Exemplaire(temp)).toAdherEmpVector());
+					}
+					affichageInfo();
+				} else {
+					lblRechercheStatus.setText("Pas d'adherent avec ce numero");
+					System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nPas d'adherent avec ce numero");
+				}
+			}else if(!textFieldNom.getText().equals("") || !textFieldPrenom.getText().equals("")){
+				vtempAdher = AdherentManager.getAllAdherent(new Adherent(textFieldNom.getText(), textFieldPrenom.getText()));
+				for (Adherent adherent : vtempAdher) {
+					lisDatResultRechAdh.addRow(adherent.toVector());
+				}
+				if(lisDatResultRechAdh.getRowCount() > 0) {
+					tempAdher = AdherentManager.getAdherFromNum(new Adherent(Integer.valueOf((String) lisDatResultRechAdh.getValueAt(0, 0))));
+					affichageInfo();
+				}
+			}
+		} catch (ClassNotFoundException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:1");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:2");
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			lblRechercheStatus.setText("Ce n'est pas un numero adherent valide");
+			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nCe n'est pas un numero adherent valide");
+		}		
+	}
+	
 	//Remplissage de la partie info en fonction de la listData
 	private void affichageInfo() {
 		txtFieldInfoNom.setText("");
@@ -267,10 +320,8 @@ public class RechercherUnAdherent extends JPanel {
 		// panRechercheBoutton
 		JPanel panRechercheBoutton = new JPanel();
 		panRechercheAdherent.add(panRechercheBoutton);
-		JButton btnRechercherAdherent = new JButton("Rechercher");
 		panRechercheBoutton.add(btnRechercherAdherent);
 
-		JButton btnRechercherAdherentReinit = new JButton("R\u00E9initialiser");
 		panRechercheBoutton.add(btnRechercherAdherentReinit);
 
 		//******************************************************Panel des resultats**************************************//
@@ -407,6 +458,8 @@ public class RechercherUnAdherent extends JPanel {
 		btnRegulariser.addActionListener(new appActionListener());
 		textFieldNumeroAdherent.addKeyListener(new AppKeyListener());
 		textFieldNumeroAdherent.addActionListener(new appActionListener());		
+		btnRechercherAdherent.addActionListener(new appActionListener());		
+		btnRechercherAdherentReinit.addActionListener(new appActionListener());		
 	}
 
 	// Accesseurs

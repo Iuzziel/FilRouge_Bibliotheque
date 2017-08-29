@@ -3,6 +3,7 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class AdherentManager {
 
@@ -13,7 +14,7 @@ public class AdherentManager {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static Adherent getAdherent(Adherent adherent) 
+	public static Adherent getAdherFromNum(Adherent adherent) 
 			throws ClassNotFoundException, SQLException{
 
 		Adherent tmp = null;
@@ -35,6 +36,38 @@ public class AdherentManager {
 					rs.getString("adherAdresse"),
 					rs.getDate("adherDateNaiss"),
 					rs.getDate("adherDateCoti"));
+		}
+
+		rs.close();
+		stm.close();	
+		return tmp;
+	}
+	
+	public static Vector<Adherent> getAllAdherent(Adherent adherent) 
+			throws ClassNotFoundException, SQLException{
+
+		Vector<Adherent> tmp = new Vector<Adherent>();
+
+		String sql = "SELECT * FROM adherent WHERE adhernom LIKE (? || '%') AND adherprenom LIKE (? || '%')";
+
+		PreparedStatement stm = 
+				ConnectionManager.getConnection().prepareStatement(sql);
+
+		stm.setString(1, adherent.getAdherNom());
+		stm.setString(2, adherent.getAdherPrenom());
+
+		ResultSet rs = stm.executeQuery();
+
+		if(rs.next())
+		{
+			tmp.add(
+					new Adherent(rs.getInt("num_adherent"),
+					rs.getString("adherNom"),
+					rs.getString("adherPrenom"),
+					rs.getString("adherAdresse"),
+					rs.getDate("adherDateNaiss"),
+					rs.getDate("adherDateCoti"))
+					);
 		}
 
 		rs.close();
