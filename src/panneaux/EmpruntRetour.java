@@ -70,10 +70,14 @@ public class EmpruntRetour extends JPanel {
 				if(FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isCotisationOk() 
 						&& FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isPenaliteOk()){
 					btnEmprAjouter_Click();
-				}else if(FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isCotisationOk()){
+				}else if(!FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isCotisationOk() 
+						&& FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isPenaliteOk()){
 					lblEmprStatut.setText("Payez d'abord la cotisation!");
-				}else if (FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isPenaliteOk()){
+				}else if (!FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isPenaliteOk() 
+						&& FenetrePrincipale.getPartieEmploye().getRechercherUnAdherent().isCotisationOk()){
 					lblEmprStatut.setText("Reglez d'abord la penalité!");
+				}else{
+					lblEmprStatut.setText("Remplissez d'abors les champs Adherents et exemplaires.");
 				}
 			}
 			if(e.getSource() == btnEmprSupprimer) {
@@ -233,8 +237,10 @@ public class EmpruntRetour extends JPanel {
 						vectExempRet.addElement(ex);
 						retourListData.addRow(ex.toEmpRetVector());
 					}else if(!nouveau && memeEmprunt){
+						lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
 						lblRetStatut.setText("Exemplaire deja ajoute.");
 					}else if(!nouveau && !memeEmprunt){
+						lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
 						lblRetStatut.setText("Exemplaire n'appartenant pas au même emprunt.");
 					}
 				}
@@ -243,6 +249,7 @@ public class EmpruntRetour extends JPanel {
 				e.printStackTrace();
 			}
 		}else{
+			lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
 			lblRetStatut.setText("Selectionnez d'abord un Adherent valide.");
 		}
 
@@ -251,7 +258,6 @@ public class EmpruntRetour extends JPanel {
 		initLblRetStatut();		
 		retourListData.removeRow(vectExempRet.size()-1);//Affichage
 		vectExempRet.removeElement(vectExempRet.lastElement());//Vecteur de l'emprunt en cours
-		System.out.println("Pkg:panneaux-Class:EmpruntRetour\nvectExempRet.size() = " + vectExempEmpr.size());	
 	}
 
 	private void btnValiderRetour_Click() {

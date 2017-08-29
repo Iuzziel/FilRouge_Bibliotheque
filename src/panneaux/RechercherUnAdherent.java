@@ -15,6 +15,7 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 import dao.Adherent;
 import dao.AdherentManager;
+import dao.AmandeManager;
 import dao.Emprunt;
 import dao.EmpruntManager;
 import dao.Exemplaire;
@@ -23,6 +24,7 @@ import dao.LigEmpruntManager;
 import dao.Parametre;
 import dao.ParametreManager;
 import fenetres.CreerUnAdherent;
+import fenetres.FenetreRegularisation;
 
 public class RechercherUnAdherent extends JPanel {
 
@@ -48,13 +50,14 @@ public class RechercherUnAdherent extends JPanel {
 	private JTable tabAdherentLivreEmprunte = new JTable(lisDatAdhLivEmp);
 	private JTextField txtFieldPenaliteEnCours;
 	private JButton btnCreerAdherent = new JButton("Cr\u00E9er Adh\u00E9rent");
-	private JButton btnEditerCetAdhrent = new JButton("Editer cet Adh\u00E9rent ?");
-	private JButton btnAnnulerEdition = new JButton("Annuler");
+	private JButton btnRegulariser = new JButton("Regulariser ?");
 	private JPanel panInfoAdherentPersoBtn = new JPanel();
 	private JLabel lblRechercheStatus = new JLabel("");
 	private Adherent tempAdher;
 	private boolean cotisationOk = false;
 	private boolean penaliteOk = false;
+	private Vector<Emprunt> vEmprPenalite = new Vector<Emprunt>();
+	private Vector<Long> vMontantPenalite = new Vector<Long>();
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -73,7 +76,7 @@ public class RechercherUnAdherent extends JPanel {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			lblRechercheStatus.setText("");
-			}
+		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -96,17 +99,8 @@ public class RechercherUnAdherent extends JPanel {
 				fenetreCreerAdherent.setAlwaysOnTop(true);;
 				panInfoAdherentPersoBtn.repaint();
 			}
-			if(e.getSource() == btnEditerCetAdhrent) {
-				panInfoAdherentPersoBtn.removeAll();
-				panInfoAdherentPersoBtn.add(new JButton("Valider"));
-				panInfoAdherentPersoBtn.add(btnAnnulerEdition);
-				panInfoAdherentPersoBtn.validate();
-				panInfoAdherentPersoBtn.repaint();
-			}
-			if(e.getSource() == btnAnnulerEdition) {
-				panInfoAdherentPersoBtn.removeAll();
-				panInfoAdherentPersoBtn.add(btnEditerCetAdhrent);
-				panInfoAdherentPersoBtn.repaint();
+			if(e.getSource() == btnRegulariser) {
+				btnRegulariser_click();
 			}
 			if(e.getSource() == textFieldNumeroAdherent) {
 				textFieldNumeroAdherent_click();
@@ -161,6 +155,8 @@ public class RechercherUnAdherent extends JPanel {
 	private void verifPenalite() {
 		txtFieldPenaliteEnCours.setText("");
 		txtFieldPenaliteEnCours.setBackground(Color.GRAY);
+		vMontantPenalite.setSize(0);
+		vEmprPenalite.setSize(0);
 		long temp = 0l;
 		try {
 			Vector<Emprunt> vEmpr = EmpruntManager.getEmprAdher(tempAdher);
@@ -175,11 +171,18 @@ public class RechercherUnAdherent extends JPanel {
 						penaliteOk = true;
 						txtFieldPenaliteEnCours.setText("Pas de retard");	
 						txtFieldPenaliteEnCours.setBackground(Color.GREEN);
-					}else{
-						temp = ((today.getTime() - c.getTimeInMillis()) / 1000 / 60 / 60 / 24) * LigEmpruntManager.getNbExempInEmp(emprunt.getNum_emprunt());
+					}else if(!AmandeManager.getIfAmandEmpPayee(emprunt.getNum_emprunt())){
+						temp = ((today.getTime() - c.getTimeInMillis()) / 1000 / 60 / 60 / 24) 
+								* LigEmpruntManager.getNbExempInEmp(emprunt.getNum_emprunt()) 
+								* ParametreManager.getParametre(new Parametre("pxamande")).getValeur();
 						penaliteOk = false;
+						vMontantPenalite.add(temp);
+						vEmprPenalite.add(emprunt);
 						txtFieldPenaliteEnCours.setText("Montant : " + (temp) + "€");	
 						txtFieldPenaliteEnCours.setBackground(Color.RED);
+					}else{
+						txtFieldPenaliteEnCours.setText("Amande payee, procedez au retour de l'emprunt.");
+						txtFieldPenaliteEnCours.setBackground(Color.CYAN);
 					}
 				}
 			}
@@ -206,8 +209,14 @@ public class RechercherUnAdherent extends JPanel {
 			cotisationOk = false;
 			txtFieldInfoCotiOk.setBackground(Color.RED);
 		}
-
 	}
+
+	private void btnRegulariser_click() {
+		@SuppressWarnings("unused")
+		JFrame jframeRegul = new FenetreRegularisation();
+	}
+
+
 
 	private void initControle() {
 		JPanel panRechercheResultats = new JPanel();
@@ -381,7 +390,7 @@ public class RechercherUnAdherent extends JPanel {
 		// panInfoAdherentPersoBtn contenant le bouton Editer
 		panInfoAdherentPerso.add(panInfoAdherentPersoBtn);
 		panInfoAdherentPersoBtn.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
-		panInfoAdherentPersoBtn.add(btnEditerCetAdhrent);
+		panInfoAdherentPersoBtn.add(btnRegulariser);
 
 		// Creation de la Jtable, association a la JScrollPane, puis ajout dans le panel
 		JPanel panInfoEmpruntAdherent = new JPanel();
@@ -395,8 +404,7 @@ public class RechercherUnAdherent extends JPanel {
 
 		//Abonnement aux Listeners
 		btnCreerAdherent.addActionListener(new appActionListener());
-		btnEditerCetAdhrent.addActionListener(new appActionListener());
-		btnAnnulerEdition.addActionListener(new appActionListener());
+		btnRegulariser.addActionListener(new appActionListener());
 		textFieldNumeroAdherent.addKeyListener(new AppKeyListener());
 		textFieldNumeroAdherent.addActionListener(new appActionListener());		
 	}
@@ -440,5 +448,11 @@ public class RechercherUnAdherent extends JPanel {
 	}
 	public boolean isPenaliteOk() {
 		return penaliteOk;
+	}
+	public Vector<Emprunt> getvEmprPenalite() {
+		return vEmprPenalite;
+	}
+	public Vector<Long> getvMontantPenalite() {
+		return vMontantPenalite;
 	}
 }
