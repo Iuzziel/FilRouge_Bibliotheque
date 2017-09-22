@@ -106,7 +106,18 @@ public class RechercherUnAdherent extends JPanel {
 				btnRegulariser_click();
 			}
 			if(e.getSource() == textFieldNumeroAdherent) {
-				textFieldNumeroAdherent_click();
+				textFieldNom.setText("");
+				textFieldPrenom.setText("");
+				//textFieldNumeroAdherent_click();
+				btnRechercherAdherent_click();
+			}
+			if(e.getSource() == textFieldNom) {
+				textFieldNumeroAdherent.setText("");
+				btnRechercherAdherent_click();
+			}
+			if(e.getSource() == textFieldPrenom) {
+				textFieldNumeroAdherent.setText("");
+				btnRechercherAdherent_click();
 			}
 			if(e.getSource() == btnRechercherAdherent) {
 				btnRechercherAdherent_click();
@@ -117,41 +128,17 @@ public class RechercherUnAdherent extends JPanel {
 		}
 	}
 
-	//Méthodes
+	//MÃ©thodes
 	private void btnRechercherAdherentReinit_Click() {
 		textFieldNumeroAdherent.setText("");
-		textFieldNumeroAdherent_click();
+		textFieldNom.setText("");
+		textFieldPrenom.setText("");
+		btnRechercherAdherentReinit_Click();
 	}
 
-	//Recherche par numero adherent
-	private void textFieldNumeroAdherent_click(){
-		try {
-			lisDatResultRechAdh.setRowCount(0);
-			lisDatAdhLivEmp.setRowCount(0);
-			tempAdher = AdherentManager.getAdherFromNum(new Adherent(Integer.valueOf(textFieldNumeroAdherent.getText())));
-			if (tempAdher != null) {
-				lisDatResultRechAdh.addRow(tempAdher.toVector());
-				for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {
-					lisDatAdhLivEmp.addRow(ExemplaireManager.getExemplaire(new Exemplaire(temp)).toAdherEmpVector());
-				}
-				affichageInfo();
-			} else {
-				lblRechercheStatus.setText("Pas d'adherent avec ce numero");
-				System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nPas d'adherent avec ce numero");
-			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:1");
-			e.printStackTrace();
-		} catch (SQLException e) {
-			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-Tag:2");
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			lblRechercheStatus.setText("Ce n'est pas un numero adherent valide");
-			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nCe n'est pas un numero adherent valide");
-		}
-	}
-
-
+	/**
+	 * Rechercher un adherent en fonctions des champs renseignes.
+	 */
 	private void btnRechercherAdherent_click() {
 		try {
 			lisDatResultRechAdh.setRowCount(0);
@@ -169,12 +156,15 @@ public class RechercherUnAdherent extends JPanel {
 					System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nPas d'adherent avec ce numero");
 				}
 			}else if(!textFieldNom.getText().equals("") || !textFieldPrenom.getText().equals("")){
-				vtempAdher = AdherentManager.getAllAdherent(new Adherent(textFieldNom.getText(), textFieldPrenom.getText()));
+				vtempAdher = AdherentManager.getAllAdherent(new Adherent(textFieldNom.getText().toUpperCase(), textFieldPrenom.getText().toLowerCase()));
 				for (Adherent adherent : vtempAdher) {
 					lisDatResultRechAdh.addRow(adherent.toVector());
 				}
 				if(lisDatResultRechAdh.getRowCount() > 0) {
 					tempAdher = AdherentManager.getAdherFromNum(new Adherent(Integer.valueOf((String) lisDatResultRechAdh.getValueAt(0, 0))));
+					for (Integer temp : EmpruntManager.getEmpruntAdhe(tempAdher.getNum_adherent())) {
+						lisDatAdhLivEmp.addRow(ExemplaireManager.getExemplaire(new Exemplaire(temp)).toAdherEmpVector());
+					}
 					affichageInfo();
 				}
 			}
@@ -189,7 +179,7 @@ public class RechercherUnAdherent extends JPanel {
 			System.out.println("Pkg:panneaux-Class:RechercherUnAdherent-\nCe n'est pas un numero adherent valide");
 		}		
 	}
-	
+
 	//Remplissage de la partie info en fonction de la listData
 	private void affichageInfo() {
 		txtFieldInfoNom.setText("");
@@ -231,7 +221,7 @@ public class RechercherUnAdherent extends JPanel {
 						penaliteOk = false;
 						vMontantPenalite.add(temp);
 						vEmprPenalite.add(emprunt);
-						txtFieldPenaliteEnCours.setText("Montant : " + (temp) + "€");	
+						txtFieldPenaliteEnCours.setText("Montant : " + (temp) + " Euros");	
 						txtFieldPenaliteEnCours.setBackground(Color.RED);
 					}else{
 						txtFieldPenaliteEnCours.setText("Amande payee, procedez au retour de l'emprunt.");
@@ -332,8 +322,7 @@ public class RechercherUnAdherent extends JPanel {
 		// Creation label, de la Jtable, association a la JScrollPane, puis ajout dans le panel, ensuite boutons et leur panel
 		JLabel lblRenvoiResultatsTitre = new JLabel("Adh\u00E9rent(s) correspondant(s) :");
 		panResultatAdherent.add(lblRenvoiResultatsTitre, BorderLayout.NORTH);
-		tabRenvoiResultatsAdherent.setPreferredSize(new Dimension(60, 100));
-		tabRenvoiResultatsAdherent.setEnabled(false);
+		tabRenvoiResultatsAdherent.setPreferredSize(new Dimension(450, 400));
 
 		JScrollPane srlTabRenvoiResultatsAdherent = new JScrollPane(tabRenvoiResultatsAdherent);
 		panResultatAdherent.add(srlTabRenvoiResultatsAdherent, BorderLayout.CENTER);
@@ -449,7 +438,7 @@ public class RechercherUnAdherent extends JPanel {
 		panInfoEmpruntAdherent.setLayout(new BorderLayout(5, 5));
 		JLabel lblLivresEmprunts = new JLabel("Livre(s) emprunte(s) : ");
 		panInfoEmpruntAdherent.add(lblLivresEmprunts, BorderLayout.NORTH);
-		tabAdherentLivreEmprunte.setPreferredSize(new Dimension(50, 50));
+		tabAdherentLivreEmprunte.setPreferredSize(new Dimension(450, 400));
 		JScrollPane srlTabAdherentLivreEmprunte = new JScrollPane(tabAdherentLivreEmprunte);
 		panInfoEmpruntAdherent.add(srlTabAdherentLivreEmprunte, BorderLayout.CENTER);
 
@@ -457,7 +446,11 @@ public class RechercherUnAdherent extends JPanel {
 		btnCreerAdherent.addActionListener(new appActionListener());
 		btnRegulariser.addActionListener(new appActionListener());
 		textFieldNumeroAdherent.addKeyListener(new AppKeyListener());
-		textFieldNumeroAdherent.addActionListener(new appActionListener());		
+		textFieldNumeroAdherent.addActionListener(new appActionListener());
+		textFieldNom.addKeyListener(new AppKeyListener());
+		textFieldNom.addActionListener(new appActionListener());
+		textFieldPrenom.addKeyListener(new AppKeyListener());
+		textFieldPrenom.addActionListener(new appActionListener());
 		btnRechercherAdherent.addActionListener(new appActionListener());		
 		btnRechercherAdherentReinit.addActionListener(new appActionListener());		
 	}

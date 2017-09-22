@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import java.awt.GridLayout;
 
 public class RechercherUnLivre extends JPanel {
 
@@ -37,8 +38,8 @@ public class RechercherUnLivre extends JPanel {
 	private JTextField textFieldTheme;
 	private JTextField textFieldExemplaire;
 	private String [] cols = {"NUM_EXEMPLAIRE", "TITRE", "AUTEUR", "BIBLIOTHEQUE", "ETAT"};
-	private DefaultTableModel listData = new DefaultTableModel(cols, 0);
-	private JTable tabRenvoiResultatsLivre = new JTable(listData);
+	private DefaultTableModel listDataResultLivre = new DefaultTableModel(cols, 0);
+	private JTable tabRenvoiResultatsLivre = new JTable(listDataResultLivre);
 	private JScrollPane srlTabRenvoiResultatsLivre;
 	private JPanel panRechercheBoutton = new JPanel();
 	private JLabel lblRechercheStatus = new JLabel("");
@@ -48,7 +49,7 @@ public class RechercherUnLivre extends JPanel {
 	public RechercherUnLivre() {
 		setBorder(new TitledBorder(null, "Rechercher un ouvrage", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		
+
 		initControle();
 	}
 
@@ -90,10 +91,10 @@ public class RechercherUnLivre extends JPanel {
 	//Recherche par numero d'exemplaire
 	public void textFieldExemplaire_click() {
 		try {
-			listData.setRowCount(0);
+			listDataResultLivre.setRowCount(0);
 			tempRecherExemp = ExemplaireManager.getExemplaire(new Exemplaire(Integer.valueOf(textFieldExemplaire.getText())));
 			if (tempRecherExemp != null) {
-				listData.addRow(tempRecherExemp.toInfoVector());
+				listDataResultLivre.addRow(tempRecherExemp.toInfoVector());
 				if(FenetreConnexion.isEstConnecte()){
 					affichageInfo(tempRecherExemp);
 					FenetrePrincipale.partieEmploye.getGestEmpruntInformationLivre().refreshInfoLivre();
@@ -136,7 +137,7 @@ public class RechercherUnLivre extends JPanel {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void initControle() {
 		JPanel panRechercheResultats = new JPanel();
 		add(panRechercheResultats);
@@ -211,6 +212,7 @@ public class RechercherUnLivre extends JPanel {
 		JLabel lblRenvoiResultatsTitre = new JLabel("Livre(s) correspondant(s) :");
 		panResultats.add(lblRenvoiResultatsTitre, BorderLayout.NORTH);
 
+		tabRenvoiResultatsLivre.setEnabled(false);
 		srlTabRenvoiResultatsLivre = new JScrollPane(tabRenvoiResultatsLivre);
 		srlTabRenvoiResultatsLivre.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panResultats.add(srlTabRenvoiResultatsLivre, BorderLayout.CENTER);
@@ -218,6 +220,7 @@ public class RechercherUnLivre extends JPanel {
 		// Bouton +d'info et son panel
 		JPanel panResultatsBtnPlusInfos = new JPanel();
 		panResultats.add(panResultatsBtnPlusInfos, BorderLayout.SOUTH);
+		panResultatsBtnPlusInfos.setLayout(new GridLayout(2, 1, 0, 1));
 		lblRechercheStatus.setForeground(Color.RED);
 		panResultatsBtnPlusInfos.add(lblRechercheStatus);
 		JButton btnResultatsPlusInfos = new JButton("+ d'infos");
@@ -225,9 +228,15 @@ public class RechercherUnLivre extends JPanel {
 
 		//Abonnement aux Listeners
 		textFieldExemplaire.addActionListener(new appActionListener());
-		textFieldExemplaire.addKeyListener(new AppKeyListener());		
+		textFieldExemplaire.addKeyListener(new AppKeyListener());
+		textFieldTitre.addActionListener(new appActionListener());
+		textFieldTitre.addKeyListener(new AppKeyListener());
+		textFieldAuteur.addActionListener(new appActionListener());
+		textFieldAuteur.addKeyListener(new AppKeyListener());
+		textFieldTheme.addActionListener(new appActionListener());
+		textFieldTheme.addKeyListener(new AppKeyListener());
 	}
-	
+
 	// **********************************Accesseurs**********************************//
 	public JTextField getTextFieldTitre() {
 		return textFieldTitre;
@@ -276,7 +285,7 @@ public class RechercherUnLivre extends JPanel {
 	public void setPanRechercheBoutton(JPanel panRechercheBoutton) {
 		this.panRechercheBoutton = panRechercheBoutton;
 	}
-	
+
 	public Exemplaire getTempRecherExemp() {
 		return tempRecherExemp;
 	}

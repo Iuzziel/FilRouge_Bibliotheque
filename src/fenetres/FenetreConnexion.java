@@ -7,6 +7,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+
+import dao.Employee;
+import dao.EmployeeManager;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -14,6 +18,7 @@ import javax.swing.JPasswordField;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -39,7 +44,7 @@ public class FenetreConnexion extends JFrame {
 		getContentPane().setLayout(new BorderLayout(5, 5));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		initControle();
-		
+
 	}
 
 	//Actions listeners
@@ -58,20 +63,29 @@ public class FenetreConnexion extends JFrame {
 		}
 
 	}
-	
+
 	//Methodes
 	private void connexion(String login, String password) {//TODO Acceder a la Bdd pour traiter la connexion
-		if(login.equals("root") && password.equals("toor")) {
-			this.setVisible(false);
-			setEstConnecte(true);
-			FenetrePrincipale.changerPartieClient();
-		}else{
-			setEstConnecte(false);
-			JOptionPane.showMessageDialog(this, "Mauvais identifiants");
+		Employee tEmp = new Employee(login);
+		try {
+			tEmp = EmployeeManager.getEmployee(new Employee(login));
+			if(password.equals(tEmp.getPassword())) {
+				this.setVisible(false);
+				setEstConnecte(true);
+				FenetrePrincipale.changerPartieClient();
+				FenetrePrincipale.partieEmploye.setEmployeeConnecte(tEmp);
+			}else{
+				setEstConnecte(false);
+				JOptionPane.showMessageDialog(this, "Mauvais identifiants");
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			JOptionPane.showMessageDialog(this, "Connexion a la BDD impossible");
+			System.out.println("Pkg:fenetres-Class:FenetreConnexion-Tag:1");
+			e.printStackTrace();
 		}
 		return;
 	}
-	
+
 	private void initControle() {
 		// Titre
 		JLabel lblConnexionAuxComptes = new JLabel("Connexion aux comptes Employ\u00E9s :");
@@ -97,6 +111,7 @@ public class FenetreConnexion extends JFrame {
 		JLabel lblConnexionIdentifiant = new JLabel("Identifiant :");
 		panConnexionId.add(lblConnexionIdentifiant);
 		textFieldConnexionIdentifiant = new JTextField();
+		textFieldConnexionIdentifiant.setText("afpa");
 		panConnexionId.add(textFieldConnexionIdentifiant);
 		textFieldConnexionIdentifiant.setColumns(10);
 
@@ -115,12 +130,12 @@ public class FenetreConnexion extends JFrame {
 		panConnexionIdPass.add(panConnexionBtn);
 		panConnexionBtn.add(btnConnexionValider);
 		panConnexionBtn.add(btnConnexionAnnuler);
-		
+
 		//Abonnement aux listeners
 		btnConnexionValider.addActionListener(new appActionListener());
 		btnConnexionAnnuler.addActionListener(new appActionListener());	
 		pwdFieldConnexion.addActionListener(new appActionListener());	
-		
+
 		this.setVisible(true);
 	}
 

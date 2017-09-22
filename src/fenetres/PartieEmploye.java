@@ -3,6 +3,9 @@ package fenetres;
 import panneaux.*;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+
+import dao.Employee;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -20,6 +23,7 @@ public class PartieEmploye extends JPanel {
 	private RechercherUnLivre rechercherUnLivre;
 	private InformationLivre gestEmpruntInformationLivre;
 	private RechercherUnAdherent rechercherUnAdherent;
+	private Employee employeeConnecte = new Employee("");
 
 	// Constructeur de la fenetre
 	public PartieEmploye() {
@@ -121,5 +125,10 @@ public class PartieEmploye extends JPanel {
 	public InformationLivre getGestEmpruntInformationLivre() {
 		return gestEmpruntInformationLivre;
 	}
-	
+	public Employee getEmployeeConnecte() {
+		return employeeConnecte;
+	}
+	public void setEmployeeConnecte(Employee employeeConnecte) {
+		this.employeeConnecte = employeeConnecte;
+	}
 }

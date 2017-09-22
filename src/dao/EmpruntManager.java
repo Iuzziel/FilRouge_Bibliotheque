@@ -52,7 +52,9 @@ public class EmpruntManager {
 
 		Vector<Emprunt> tmp = new Vector<Emprunt>();
 
-		String sql = "SELECT * FROM emprunt WHERE num_adherent = ?";
+		String sql = "SELECT * FROM emprunt "
+				+ "WHERE num_adherent = ? "
+				+ "AND emp_date_ret IS NULL";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);
@@ -160,7 +162,8 @@ public class EmpruntManager {
 		String sql = "SELECT num_exemplaire FROM ligemprunt "
 				+ "JOIN emprunt "
 				+ "ON emprunt.num_emprunt = ligemprunt.num_emprunt "
-				+ "WHERE emprunt.num_adherent = ?";
+				+ "WHERE emprunt.num_adherent = ? "
+				+ "AND EMPRUNT.emp_date_ret IS NULL";
 
 		PreparedStatement stm = 
 				ConnectionManager.getConnection().prepareStatement(sql);

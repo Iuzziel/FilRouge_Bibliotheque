@@ -97,6 +97,7 @@ public class Header extends JPanel {
 			}
 			if (e.getSource() == lblHeaderSeConnecter && lblHeaderSeConnecter.getText().equals("Se deconnecter")) {
 				FenetreConnexion.setEstConnecte(false);
+				FenetrePrincipale.partieEmploye.setEmployeeConnecte(null);
 				FenetrePrincipale.changerPartieClient();
 			}
 		}

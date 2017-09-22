@@ -41,7 +41,7 @@ public class ExemplaireManager {
 		stm.close();	
 		return tmp;
 	}
-	
+
 	/**
 	 * Retourne le nombre d'exemplaire d'un meme livre, dans TOUTE les bibliotheques, a partir de son num_livre.
 	 * @param 
@@ -72,7 +72,7 @@ public class ExemplaireManager {
 		stm.close();
 		return tmp;
 	}
-	
+
 	/**
 	 * Retourne le nombre d'exemplaire d'un meme livre, dans LA bibliotheques de l'exemplaire en parametre.
 	 * @param 
@@ -105,7 +105,7 @@ public class ExemplaireManager {
 		stm.close();
 		return tmp;
 	}
-	
+
 	/**
 	 * Retourne la liste des num_exemplaire d'un meme livre, a partir de son num_livre
 	 * @param 
@@ -113,7 +113,7 @@ public class ExemplaireManager {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static Vector<Integer> getAllExemplaire(Exemplaire exemplaire) 
+	public static Vector<Integer> getAllExempFromNum(Exemplaire exemplaire) 
 			throws ClassNotFoundException, SQLException{
 
 		Vector<Integer> tmp = new Vector<Integer>();

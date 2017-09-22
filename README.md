@@ -12,8 +12,8 @@
 
 * - [X] Analyse
 * - [X] Interface
-* - [ ] Conception BDD
-* - [ ] Réalisation
+* - [X] Conception BDD
+* - [X] Réalisation
 
 ## Exercice de restitution :
 

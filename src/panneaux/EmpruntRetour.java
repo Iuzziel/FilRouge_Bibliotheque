@@ -142,24 +142,29 @@ public class EmpruntRetour extends JPanel {
 		if(vectExempEmpr.size() < nbEmpruntMaxAdherent){
 			boolean nouveau = true;//Booleen pour verifier si l'exemplaire n'a pas ete ajoute plusieurs fois dans le meme emprunt
 			Exemplaire ex = FenetrePrincipale.partieEmploye.getRechercherUnLivre().getTempRecherExemp();
-			for (Exemplaire exTemp : vectExempEmpr) {
-				if(exTemp.equals(ex)) nouveau = false;
-			}
-			try {
-				if (nouveau && LigEmpruntManager.getDisp(ex).equals("Oui")) {
-					vectExempEmpr.addElement(ex);
-					empruntListData.addRow(ex.toEmpRetVector());
-				}else if(!nouveau){
-					lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
-					lblEmprStatut.setText("Livre deja scanne!");
-					System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:1");
-				}else{
-					lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
-					lblEmprStatut.setText("Livre indisponible!");
+			if(ex.getNum_biblio() == FenetrePrincipale.partieEmploye.getEmployeeConnecte().getNum_biblio()){
+				for (Exemplaire exTemp : vectExempEmpr) {
+					if(exTemp.equals(ex)) nouveau = false;
 				}
-			} catch (ClassNotFoundException | SQLException e) {
-				System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:4");
-				e.printStackTrace();
+				try {
+					if (nouveau && LigEmpruntManager.getDisp(ex).equals("Oui")) {
+						vectExempEmpr.addElement(ex);
+						empruntListData.addRow(ex.toEmpRetVector());
+					}else if(!nouveau){
+						lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+						lblEmprStatut.setText("Livre deja scanne!");
+						System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:1");
+					}else{
+						lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+						lblEmprStatut.setText("Livre indisponible!");
+					}
+				} catch (ClassNotFoundException | SQLException e) {
+					System.out.println("Pkg:panneaux-Class:EmpruntRetour-Tag:4");
+					e.printStackTrace();
+				}				
+			}else{
+				lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+				lblEmprStatut.setText("Livre d'une autre bibliotheque!");
 			}
 		}else{
 			lblEmprStatut.setForeground(Color.RED);
@@ -175,8 +180,10 @@ public class EmpruntRetour extends JPanel {
 	 */
 	private void btnEmprSupprimer_Click() {
 		initLblEmprStatut();
-		empruntListData.removeRow(vectExempEmpr.size()-1);//Affichage
-		vectExempEmpr.removeElement(vectExempEmpr.lastElement());//Vecteur de l'emprunt en cours
+		if(empruntListData.getRowCount() != 0){
+			empruntListData.removeRow(vectExempEmpr.size()-1);//Affichage
+			vectExempEmpr.removeElement(vectExempEmpr.lastElement());//Vecteur de l'emprunt en cours	
+		}
 	}
 
 	/**
@@ -229,21 +236,27 @@ public class EmpruntRetour extends JPanel {
 				}else{
 					if((numEmpRetour == EmpruntManager.getEmpFromExemp(ex))?(memeEmprunt = true):(memeEmprunt = false));//verif si l'exemplaire vient du meme emprunt que les autres
 				}
-				for (Exemplaire exTmp : vectExempRet) {
-					if(exTmp.getNum_exemplaire() == ex.getNum_exemplaire()) nouveau = false;//verif si l'exemplaire est deja scanne
-				}
-				for (Integer tmpInt : vTmp) {//ajout dans le retour si condition ok
-					if(ex.getNum_exemplaire() == tmpInt && nouveau && memeEmprunt){
-						vectExempRet.addElement(ex);
-						retourListData.addRow(ex.toEmpRetVector());
-					}else if(!nouveau && memeEmprunt){
-						lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
-						lblRetStatut.setText("Exemplaire deja ajoute.");
-					}else if(!nouveau && !memeEmprunt){
-						lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
-						lblRetStatut.setText("Exemplaire n'appartenant pas au même emprunt.");
+				if(ex.getNum_biblio() == FenetrePrincipale.partieEmploye.getEmployeeConnecte().getNum_biblio()){
+					for (Exemplaire exTmp : vectExempRet) {
+						if(exTmp.getNum_exemplaire() == ex.getNum_exemplaire()) nouveau = false;//verif si l'exemplaire est deja scanne
 					}
+					for (Integer tmpInt : vTmp) {//ajout dans le retour si condition ok
+						if(ex.getNum_exemplaire() == tmpInt && nouveau && memeEmprunt){
+							vectExempRet.addElement(ex);
+							retourListData.addRow(ex.toEmpRetVector());
+						}else if(!nouveau && memeEmprunt){
+							lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+							lblRetStatut.setText("Exemplaire deja ajoute.");
+						}else if(!nouveau && !memeEmprunt){
+							lblRetStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+							lblRetStatut.setText("Exemplaire n'appartenant pas au même emprunt.");
+						}
+					}
+				}else{
+					lblEmprStatut.setIcon(new ImageIcon(EmpruntRetour.class.getResource("/javax/swing/plaf/metal/icons/Warn.gif")));
+					lblEmprStatut.setText("Livre d'une autre bibliotheque!");
 				}
+
 			} catch (ClassNotFoundException | SQLException e) {
 				System.out.println("Pkg:panneaux-Class:EmpruntRetour\nbtnRetAjouter_Click()");
 				e.printStackTrace();
@@ -265,7 +278,7 @@ public class EmpruntRetour extends JPanel {
 		try {
 			if(vectExempRet.size() == LigEmpruntManager.getNbExempInEmp(numEmpRetour)){
 				try {
-					int nbligneup = EmpruntManager.updateEmprunt(EmpruntManager.getEmpFromExemp(vectExempRet.elementAt(1)));
+					int nbligneup = EmpruntManager.updateEmprunt(EmpruntManager.getEmpFromExemp(vectExempRet.firstElement()));
 					if(nbligneup > 0) {
 						lblRetStatut.setForeground(Color.GREEN);
 						lblRetStatut.setText("Retour validé");
